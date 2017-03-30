@@ -1,5 +1,5 @@
 // This is just pared-down Glitch project boilerplate. 
-// You probably don't need to modify this for a simple Wistia embedding demo page.
+// You probably don't need to modify this for a simple Wistia support demo page.
 
 
 // server.js

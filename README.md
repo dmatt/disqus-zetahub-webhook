@@ -7,10 +7,9 @@ Here's how to use it:
 
 1. Click `"Remix this"` in the header above. Like, right now!
 2. Sign into Glitch if you're not signed in yet, so you can access your fancy new project later.
-3. Click on the project title on the upper left. Rename it to describe the thing you're showing the customer.
+3. Click on the project title on the upper left. Rename it to describe the thing you're showing the customer. This will be in the URL, too.
 4. Edit `index.html` (and other files if necessary) to be _your_ demo, instead of the template's demo.
-5. Delete this section of the README.
-6. Edit the rest of `README.md` to explain the demo to your customer.
+5. Delete this section of the README, and edit the rest of `README.md` to explain the demo to your customer.
 
 -------------------------------------------------------------------------------
 
