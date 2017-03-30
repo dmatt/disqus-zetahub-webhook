@@ -20,7 +20,6 @@ This is a starter Glitch project you can use to easily show a customer some code
 
   Do this if you intend to share the same project with other customers in the future. Just share the URL of the page you're on right now (like `https://glitch.com/edit/#!/whatever-you-decided-to-call-it-in-step-3`).
 
-
 -------------------------------------------------------------------------------
 
 🚨 Delete this line and the stuff above before sharing with the customer, so they'll just see your friendly customer-facing readme, below 🚨
