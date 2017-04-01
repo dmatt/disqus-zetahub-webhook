@@ -25,9 +25,3 @@ var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
 
-
-fs.readdir('.', (err, files) => {
-  files.forEach(file => {
-    console.log(file);
-  });
-})
