@@ -1,5 +1,5 @@
 // client-side js
 
 // set up remix link
-var pathName = window.location.pathname;
-$("#remix_on_glitch").attr("href", "https://glitch.com/edit/#!/" + pathName);
+var subdomain = window.location.hostname.split('.').shift();
+$("#view_source").attr("href", "https://glitch.com/edit/#!/" + subdomain);
