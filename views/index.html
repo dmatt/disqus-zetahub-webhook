@@ -16,7 +16,7 @@
       Hi! This here's a demo of <a href="https://wistia.com/doc/webhooks">Wistia Webhooks</a>.
     </p>
     <p>
-      Play the video below and open your browser's console to see webhooks in action.
+      Play the video below to see webhooks in action.
     </p>
     
     
@@ -45,21 +45,6 @@
     
     <!-- Vue.js -->
     <script src="https://unpkg.com/vue"></script>
-    <script>
-      
-          <script>
-      var socket = io();
-      socket.on('event', function(payload){
-        console.log(payload);
-      });
-      
-      var app = new Vue({
-        el: '#webhooks_log',
-        data: {
-          message: webhooksPayloads
-        }
-      })
-    </script>
     
     <!-- Socket.IO -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
@@ -67,6 +52,23 @@
 
     <!-- Other JavaScript you might want to include, if you're not into the whole inline scripts thing -->
     <script src="/client.js"></script>
+    
+    
+    <script>
+      window.payloads = [];
+      var socket = io();
+      socket.on('event', function(payload){
+        console.log(payload);
+        payloads.push(JSON.stringify(payload))
+      });
+      
+      var app = new Vue({
+        el: '#webhooks_log',
+        data: {
+          message: payloads
+        }
+      })
+    </script>
 
   </body>
 </html>
