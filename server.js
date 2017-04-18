@@ -19,6 +19,10 @@ http.listen(process.env.PORT, function(){
   console.log('listening on:', process.env.PORT);
 });
 
+io.on('connection', function(socket){
+  console.log('user connected');
+});
+
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
