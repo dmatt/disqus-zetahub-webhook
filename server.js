@@ -13,9 +13,6 @@ var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
 const {getHash} = require('./signature-verification')
 
-// we've started you off with Express, 
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
-
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
