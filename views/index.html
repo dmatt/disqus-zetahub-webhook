@@ -26,9 +26,7 @@
     <div class="wistia_embed wistia_async_bnxj98f2qv" style="height:360px;width:640px">&nbsp;</div>
     
     <div id="webhooks_log">
-      <pre v-highlightjs><code class="javascript">
-        {{ message }}
-      </code></pre>
+      <pre v-highlightjs="payloads"><code class="javascript"></code></pre>
     </div>
     
     <!-- Footer link to remix on Glitch     -->
@@ -65,15 +63,8 @@
       var socket = io();
       socket.on('event', function(payload){
         console.log(payload);
-        payloads.push(JSON.stringify(payload))
+        payloads.push(JSON.stringify(payload, null, 2))
       });
-      
-      var app = new Vue({
-        el: '#webhooks_log',
-        data: {
-          message: payloads
-        }
-      })
       
       Vue.directive('highlightjs', {
         deep: true,
@@ -98,6 +89,13 @@
               hljs.highlightBlock(target)
             }
           })
+        }
+      })
+      
+      var app = new Vue({
+        el: '#webhooks_log',
+        data: {
+          payloads: payloads
         }
       })
     </script>
