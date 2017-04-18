@@ -25,7 +25,9 @@
     <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
     <div class="wistia_embed wistia_async_bnxj98f2qv" style="height:360px;width:640px">&nbsp;</div>
     
-    
+    <div id="webhooks_log">
+      {{ message }}
+    </div>
     
     <!-- Footer link to remix on Glitch     -->
     <footer>
@@ -41,17 +43,30 @@
             integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
             crossorigin="anonymous"></script>
     
-    
-    <!-- Other JavaScript you might want to include, if you're not into the whole inline scripts thing -->
-    <script src="/client.js"></script>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue"></script>
     <script>
+      
+          <script>
       var socket = io();
       socket.on('event', function(payload){
         console.log(payload);
       });
+      
+      var app = new Vue({
+        el: '#webhooks_log',
+        data: {
+          message: webhooksPayloads
+        }
+      })
     </script>
+    
+    <!-- Socket.IO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+
+
+    <!-- Other JavaScript you might want to include, if you're not into the whole inline scripts thing -->
+    <script src="/client.js"></script>
 
   </body>
 </html>
