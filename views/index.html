@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Wistia Support Demo</title>
+    <title>Wistia Webhooks Demo</title>
     <meta name="description" content="A Wistia thing made with Glitch">
     <link id="favicon" rel="icon" href="https://cdn.glitch.com/fa923940-f3fc-440e-a0c8-6ba5804bf6d0%2Ffavicon.ico?1490716873266" type="image/x-icon">
     <meta charset="utf-8">
@@ -11,36 +11,21 @@
   </head>
   <body>
     
-    <!-- Note about what to do, or look at, on the live demo page -->
+    <!-- Welcome note -->
     <p>
-      Hi! This here's a demo of how to get a handle to the <a href="https://wistia.com/doc/player-api">Wistia Player API</a>, and bind to a Player API event.
+      Hi! This here's a demo of <a href="https://wistia.com/doc/webhooks">Wistia Webhooks</a>.
     </p>
     <p>
-      Please open your browser's console, and play the video.
+      Play the video below to see webhooks in action.
     </p>
     
     
-    <!-- Standard (aka async) embed. Replace this with the embed(s) or other stuff relevant to your customer's problem. -->
+    <!-- Standard (aka async) embed. -->
     <script src="https://fast.wistia.com/embed/medias/bnxj98f2qv.jsonp" async></script>
     <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
     <div class="wistia_embed wistia_async_bnxj98f2qv" style="height:360px;width:640px">&nbsp;</div>
     
-    
-    <!-- Example Player API example, using _wq to get a handle to that embed 👆 -->
-    <script>
-      window._wq = window._wq || [];
-      _wq.push({
-        id: 'bnxj98f2qv',
-        onReady: myFunction
-      });
-      
-      function myFunction(video) {
-        video.bind('play', function() {
-          console.log('play event fired for video with hashedId: ' + video.hashedId());
-        });
-      }
-      
-    </script>
+
     
     <!-- Footer link to remix on Glitch     -->
     <footer>

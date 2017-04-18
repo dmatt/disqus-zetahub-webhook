@@ -5,8 +5,9 @@ Wistia Webhooks Example: start consuming [Wistia webhooks](https://wistia.com/do
 
 ---
 
+Webhooks are a simple way to let your application hear about stuff when it happens in Wistia. 
 
-Here's the fastest way to get this project up & running for yourself:
+Here's the fastest way to get this project up & running for your own Wistia account:
 
 First, go to [the Beta page in your Wistia account settings](https://my.wistia.com/account/beta) to enable webhooks on your account, if you haven't already.
 
@@ -22,4 +23,4 @@ Last two setup things:
 
 That's it! 🎉
 
-To see your webhooks roll in, click 
+To see your webhooks roll in, click `"Show"` 👆 and play your video.
