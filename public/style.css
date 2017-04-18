@@ -5,6 +5,15 @@
 }
 
 
+.log_wrapper {
+  width: 640px;
+}
+
+.log {
+  height: 240px;
+  overflow: scroll;
+}
+
 /* footer */
 
 footer {
