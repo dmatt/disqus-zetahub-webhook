@@ -18,7 +18,7 @@ Then go to [the Webhooks page in your Wistia account](https://my.wistia.com/acco
 * **Events**: Choose the events you're interested in. `viewing_session.play` is a good place to start.
 
 Last two setup things:
-1. Copy your Secret Key and paste it into the `.env` file here in Glitch, like `secret_key="best_secret_key_ever"`.
+1. Copy your Secret Key and paste it into the `.env` file here in Glitch, like `WEBHOOKS_SECRET_KEY="best_secret_key_ever"`.
 2. Replace the video embedded in `views/index.html` with a video from [your own Wistia account](https://my.wistia.com).
 
 That's it! 🎉
