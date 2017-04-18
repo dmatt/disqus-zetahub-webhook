@@ -15,8 +15,8 @@ const {getHash} = require('./signature-verification')
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
 
-http.listen(4000, function(){
-  console.log('listening on *:4000');
+http.listen(process.env.PORT, function(){
+  console.log('listening on:', process.env.PORT);
 });
 
 
@@ -39,17 +39,8 @@ app.get("/", function (request, response) {
 });
 
 
-// listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
-
-
-// Listen for new viewing sessions.
-// This requires setting up a webhook in Wistia, https://wistia.com/doc/webhooks,
-// with the POST URL set to https://wistiabot.glitch.me/viewing_sessions
-
-app.post("/viewing_sessions", upload.array(), function (request, response, next) {
+// Listen for incoming webhooks.
+app.post("/webhooks", upload.array(), function (request, response, next) {
 
   const headers = request.headers
   const wistiaSignature = headers['x-wistia-signature']
@@ -69,7 +60,11 @@ app.post("/viewing_sessions", upload.array(), function (request, response, next)
     for (var i = 0, numberOfEvents = events.length; i < numberOfEvents; i++) {
       const payload = events[i].payload
       console.log(payload)
+      
+      // send this event payload to the client side with socket.io
       io.emit('event', payload)
+      
+      
       const payloadText = JSON.stringify(payload)
       const mediaName = payload.media.name
       const messageText = "Somebody watched " + mediaName + "!" + "```" + payloadText + "```"
