@@ -79,6 +79,8 @@ app.post("/viewing_sessions", upload.array(), function (request, response, next)
   }
 });
 
-const () => {
-  
+var events = []
+
+const showEvent = (event) => {
+  events.push(event)
 }
