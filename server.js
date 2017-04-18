@@ -71,49 +71,13 @@ app.post("/viewing_sessions", upload.array(), function (request, response, next)
       const messageText = "Somebody watched " + mediaName + "!" + "```" + payloadText + "```"
       const titleLink = "https://dave.wistia.com/medias/" + payload.media.id;
       const viewerLink = "https://dave.wistia.com/stats/viewer/" + payload.visitor.id;
-      wistiabot.say({
-        channel: "D4QEFTRBJ", // DM to Dave, for now
-        text: messageText,
-        attachments: [
-          {
-            "attachment_type": "default",
-            "title": "Lenny Delivers Video",
-            "title_link": titleLink,
-            "color": "#54bbff",
-            "fields": [
-              {
-                "title": "Viewer details",
-                "value": viewerLink,
-                "short": false
-              }
-            ]
-          }
-        ]
-      })
     }
-    
-    // TODO: take the visitor id from the payload, hit the Wistia API to get more info about that visitor, then
-    // have the bot say something about the visitor, plus the media's name. probably the page it was played on, too.
 
-    response.sendStatus(200)
+    response.sendStatus(200) // Be sure to send a 200 OK response. Otherwise, Wistia will continue sending webhooks your way,
     
   } else {
-    console.log("I don't trust that shit at all")
+    console.log("Signature doesn't match. Ruh-roh.")
   }
 });
+
   
-
-// TODO: Figure out how the eff to get the bot structured to work for multiple people, and multiple teams. 
-// Store people's and team's setting ssomewhere. Maybe firebase? 
-// https://github.com/howdyai/botkit-storage-firebase
-// Firebase
-// firebaseAdmin.initializeApp({
-//   credential: firebaseAdmin.credential.cert({
-//     projectId: process.env.PROJECT_ID,
-//     clientEmail: process.env.CLIENT_EMAIL,
-//     privateKey: process.env.PRIVATE_KEY
-//   }),
-//   databaseURL: "https://wistiabot.firebaseio.com"
-// });
-
-
