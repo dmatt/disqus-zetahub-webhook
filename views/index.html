@@ -48,6 +48,9 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io();
+      socket.on('event', function(payload){
+        $('#messages').append($('<li>').text(msg));
+      });
     </script>
 
   </body>

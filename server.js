@@ -12,6 +12,12 @@ var bodyParser = require('body-parser');
 var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
 const {getHash} = require('./signature-verification')
+var http = require('http').Server(app)
+var io = require('socket.io')(http)
+
+http.listen(4000, function(){
+  console.log('listening on *:4000');
+});
 
 
 // http://expressjs.com/en/starter/static-files.html
@@ -63,6 +69,7 @@ app.post("/viewing_sessions", upload.array(), function (request, response, next)
     for (var i = 0, numberOfEvents = events.length; i < numberOfEvents; i++) {
       const payload = events[i].payload
       console.log(payload)
+      io.emit('event', payload)
       const payloadText = JSON.stringify(payload)
       const mediaName = payload.media.name
       const messageText = "Somebody watched " + mediaName + "!" + "```" + payloadText + "```"
@@ -79,8 +86,8 @@ app.post("/viewing_sessions", upload.array(), function (request, response, next)
   }
 });
 
-var events = []
+// var events = []
 
-const showEvent = (event) => {
-  events.push(event)
-}
+// const showEvent = (event) => {
+//   events.push(event)
+// }
