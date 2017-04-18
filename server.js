@@ -73,7 +73,9 @@ app.post("/viewing_sessions", upload.array(), function (request, response, next)
       const viewerLink = "https://dave.wistia.com/stats/viewer/" + payload.visitor.id;
     }
 
-    response.sendStatus(200) // Be sure to send a 200 OK response. Otherwise, Wistia will continue sending webhooks your way,
+    // Be sure to send a 200 OK response, to let Wistia know that all is well. 
+    // Otherwise, Wistia will continue sending webhooks your way a few unnecessary times
+    response.sendStatus(200) 
     
   } else {
     console.log("Signature doesn't match. Ruh-roh.")
