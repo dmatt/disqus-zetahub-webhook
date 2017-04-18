@@ -1,11 +1,13 @@
 Wistia Webhooks Example: start consuming [Wistia webhooks](https://wistia.com/doc/webhooks) in _no time_*
 ======================================================================
 
-\* "no time" = about two minutes. We timed it!
+\* "no time" = about two minutes
 
 ---
 
 Webhooks are a simple way to let your application hear about stuff when it happens in Wistia. 
+
+
 
 Here's the fastest way to get this project up & running for your own Wistia account:
 
