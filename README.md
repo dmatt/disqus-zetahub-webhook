@@ -7,7 +7,10 @@ Wistia Webhooks Example: start consuming [Wistia webhooks](https://wistia.com/do
 
 Webhooks are a simple way to let your application hear about stuff when it happens in Wistia. 
 
+This app recieves Wistia webhooks when you [play the video](https://wistia-webhooks-example.glitch.me?wtime=0s), and logs each payload to the console on the page as they come in.
 
+Remixing instructions:
+----------------------
 
 Here's the fastest way to get this project up & running for your own Wistia account:
 
