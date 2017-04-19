@@ -7,9 +7,11 @@ Wistia Webhooks Example: start consuming [Wistia webhooks](https://wistia.com/do
 
 Webhooks are a simple way to let your application hear about stuff when it happens in Wistia. 
 
-This app recieves Wistia webhooks when you [play the video](https://wistia-webhooks-example.glitch.me?wtime=0s), and logs each payload to the console on the page as they come in.
+This app recieves Wistia webhooks when you [play the video](https://wistia-webhooks-example.glitch.me?wtime=0s), sends each payload to the client side with Socket.IO, and then logs the data to a console below the video.
 
-**Click `Show` to see the live demo right now, or [`remix this`] to make it your own.**
+![screencast](https://cdn.glitch.com/fd94eac0-7f39-48d7-85d4-87ae0d46b36a%2Flenny-webhooks-demo.gif?1492620682049)
+
+**Click `Show` to see the live demo right now, or `Remix this` to make it your own.**
 
 Remixing instructions:
 ----------------------
@@ -30,4 +32,4 @@ Last two setup things:
 
 That's it! 🎉
 
-To see your webhooks roll in, click `"Show"` 👆 and play your video.
+**To see your webhooks roll in, click `"Show"` 👆 and play your video.**
