@@ -1,8 +1,5 @@
 // client-side js
 
-var io = require('socket.io')
-
-
 window.payloads = [];
 var socket = io();
 socket.on('event', function(payload){
