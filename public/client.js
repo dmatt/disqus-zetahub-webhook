@@ -1,5 +1,6 @@
 // client-side js
 
+var io = require('socket.io')
 
 
 window.payloads = [];
