@@ -11,7 +11,7 @@ This app recieves Wistia webhooks when you [play the video](https://wistia-webho
 
 ![screencast](https://cdn.glitch.com/fd94eac0-7f39-48d7-85d4-87ae0d46b36a%2Flenny-webhooks-demo.gif?1492620682049)
 
-**Click `Show` to see the live demo right now, or `Remix this` to make it your own.**
+**Click `Show` (up top) to try the live demo right now, or `Remix this` to make it your own.**
 
 Remixing instructions:
 ----------------------
@@ -27,8 +27,8 @@ Then go to [the Webhooks page in your Wistia account](https://my.wistia.com/acco
 * **Events**: Choose the events you're interested in. `viewing_session.play` is a good place to start. This demo is built to show `viewing_session` events.
 
 Last two setup things:
-1. Copy your Secret Key and paste it into the `.env` file here in Glitch, like `WEBHOOKS_SECRET_KEY="best_secret_key_ever_I_tell_ya"`.
-2. Replace the video embedded in `views/index.html` with a video from [your own Wistia account](https://my.wistia.com).
+1. 👈 Copy your Secret Key and paste it into the `.env` file here in Glitch, like `WEBHOOKS_SECRET_KEY="best_secret_key_ever_I_tell_ya"`.
+2. 👈 Replace the video embedded in `views/index.html` with a video from [your own Wistia account](https://my.wistia.com).
 
 That's it! 🎉
 
