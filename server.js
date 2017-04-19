@@ -1,7 +1,3 @@
-// This is just pared-down Glitch project boilerplate. 
-// You probably don't need to modify this for a simple Wistia support demo page.
-
-
 // server.js
 // where your node app starts
 
@@ -23,25 +19,18 @@ io.on('connection', function(socket){
   console.log('user connected');
 });
 
-
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
-
-// https://expressjs.com/en/api.html#req.body
-// app.use(bodyParser.json()); // for parsing application/json
-// app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 const options = {
   type: 'application/json'
 }
 app.use(bodyParser.raw(options));
 
-
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
-
 
 // Listen for incoming webhooks.
 app.post("/webhooks", upload.array(), function (request, response, next) {
@@ -55,7 +44,6 @@ app.post("/webhooks", upload.array(), function (request, response, next) {
   console.log("The computed hash is: ", computedHash)
   
   if (wistiaSignature === computedHash) {
-      
     console.log("Signature looks good!")
     
     const events = JSON.parse(requestBody).events
@@ -64,16 +52,8 @@ app.post("/webhooks", upload.array(), function (request, response, next) {
     for (var i = 0, numberOfEvents = events.length; i < numberOfEvents; i++) {
       const payload = events[i].payload
       console.log(payload)
-      
       // send this event payload to the client side with socket.io
       io.emit('event', payload)
-      
-      
-      const payloadText = JSON.stringify(payload)
-      const mediaName = payload.media.name
-      const messageText = "Somebody watched " + mediaName + "!" + "```" + payloadText + "```"
-      const titleLink = "https://dave.wistia.com/medias/" + payload.media.id;
-      const viewerLink = "https://dave.wistia.com/stats/viewer/" + payload.visitor.id;
     }
 
     // Be sure to send a 200 OK response, to let Wistia know that all is well. 
@@ -84,9 +64,3 @@ app.post("/webhooks", upload.array(), function (request, response, next) {
     console.log("Signature doesn't match. Ruh-roh.")
   }
 });
-
-// var events = []
-
-// const showEvent = (event) => {
-//   events.push(event)
-// }
