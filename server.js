@@ -43,6 +43,8 @@ app.post("/webhooks", upload.array(), function (request, response, next) {
   const computedHash = getHash(requestBody)
   console.log("The computed hash is: ", computedHash)
   
+  
+  // Verify that the webhooks are legit, using the secret key
   if (wistiaSignature === computedHash) {
     console.log("Signature looks good!")
     
