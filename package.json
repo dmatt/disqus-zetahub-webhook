@@ -1,5 +1,5 @@
 {
-  "name": "wistia-webhooks-example",
+  "name": "wistia webhooks example",
   "version": "0.0.1",
   "description": "An example app that recieves Wistia webhooks",
   "main": "server.js",
