@@ -62,6 +62,9 @@
         // If we didn't do this check, all events for the account used in this demo
         // would get logged to the demo page for everybody looking at it at that time.
         if (payload.visitor.id == Wistia.visitorKey.value()) {
+          // Prepend the latest payload to the array of payloads.
+          // The "2" here makes the output get pretty-printed with 2 spaces for indentation.
+          // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#The_space_argument
           payloads.unshift(JSON.stringify(payload, null, 2))
         }
       });
