@@ -15,10 +15,6 @@ http.listen(process.env.PORT, function(){
   console.log('listening on:', process.env.PORT);
 });
 
-io.on('connection', function(socket){
-  console.log('user connected');
-});
-
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
@@ -51,12 +47,12 @@ app.post("/webhooks", upload.array(), function (request, response, next) {
     const events = JSON.parse(requestBody).events
     // There can be multiple events. They're always in an array even if there's only one.
     // https://wistia.com/doc/webhooks#request_body
-    for (var i = 0, numberOfEvents = events.length; i < numberOfEvents; i++) {
-      const payload = events[i].payload
+    events.forEach(function (event) {
+      const payload = event.payload
       console.log(payload)
       // send this event payload to the client side with socket.io
       io.emit('event', payload)
-    }
+    });
 
     // Be sure to send a 200 OK response, to let Wistia know that all is well. 
     // Otherwise, Wistia will continue sending webhooks your way a few unnecessary times
