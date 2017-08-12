@@ -27,19 +27,6 @@
       <pre v-highlightjs="payloads"><code class="javascript log"></code></pre>
     </div>
     
-    <!-- Footer link to remix on Glitch     -->
-    <footer>
-      <a id="view_source" href="#" target="_blank">
-        <img src="https://cdn.glitch.com/fa923940-f3fc-440e-a0c8-6ba5804bf6d0%2Fremix-on-glitch?1491273824162"
-             width="162"
-             alt="Remix on Glitch">
-      </a>
-      <script>
-        // set up portable remix link
-        var subdomain = window.location.hostname.split('.').shift();
-        document.getElementById("view_source").href = "https://glitch.com/edit/#!/" + subdomain;
-      </script>
-    </footer>
     
     <!-- Vue.js -->
     <script src="https://unpkg.com/vue"></script>
@@ -107,6 +94,12 @@
         }
       })
     </script>
+    
+    <!-- The Glitch button -->
+    <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
+    <script src="https://button.glitch.me/button.js"></script>
+    <!-- A little script to add a "More [Team Name] Projects" button to that 👆 -->
+    <script src="https://team-projects-button.glitch.me/js/team-projects-button.js"></script>
     
   </body>
 </html>
