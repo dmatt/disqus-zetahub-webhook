@@ -45,13 +45,11 @@
       
       // make the empty code block a little pretty to start
       var codeBlock = document.getElementsByTagName("code")[0]
-      console.log(codeBlock)
       hljs.highlightBlock(codeBlock);
       
       
       // as webhooks payloads come in from the server side via Socket.IO, we add them
-      // to this `payloads` array. Vue.js takes care of updating the UI to show these
-      // payloads in the console below the video.
+      // to this `payloads` array, then stringify that data and show it on the page.
       window.payloads = [];
       var socket = io();
       socket.on('event', function(payload){
@@ -66,7 +64,6 @@
       });
       
       function showPayloads(payloads) {
-        console.log("showing payloads");
         webhooksLog.innerHTML = `<h3>Here are the payloads</h3>`;
         var code = document.createElement("code");
         code.className = "log"
