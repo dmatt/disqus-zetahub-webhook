@@ -24,7 +24,12 @@
     <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
     <div class="wistia_embed wistia_async_t7clqlza0a" style="height:360px;width:640px">&nbsp;</div>
     
-    <div id="webhooks_log"><pre><code></code></pre></div>
+    <div id="webhooks_log">
+      <pre>
+        <code class="log">
+        </code>
+      </pre>
+    </div>
     
     
     <!-- Socket.IO -->
@@ -39,7 +44,9 @@
       var webhooksLog = document.getElementById("webhooks_log");
       
       // make the empty code block a little pretty to start
-      var codeBlock = 
+      var codeBlock = document.getElementsByTagName("code")[0]
+      console.log(codeBlock)
+      hljs.highlightBlock(codeBlock);
       
       
       // as webhooks payloads come in from the server side via Socket.IO, we add them
