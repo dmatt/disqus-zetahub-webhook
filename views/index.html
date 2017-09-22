@@ -10,9 +10,6 @@
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
-    <h1>
-      Thanks for checking this project out! Doing a quick change to make this use vanilla JS instead of Vue, so it might be broken and refresh a lot for the next few minutes. Please try again in a few minutes! (Wrote this at 11:28 AM EDT on Sept 22)
-    </h1>
     
     <!-- Welcome note -->
     <p>
@@ -27,11 +24,8 @@
     <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
     <div class="wistia_embed wistia_async_t7clqlza0a" style="height:360px;width:640px">&nbsp;</div>
     
-    <div id="webhooks_log"></div>
+    <div id="webhooks_log"><pre><code></code></pre></div>
     
-    
-    <!-- Vue.js -->
-<!--     <script src="https://unpkg.com/vue"></script> -->
     
     <!-- Socket.IO -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
@@ -40,7 +34,14 @@
     <link rel="stylesheet" href="highlighting.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/highlight.min.js"></script>
     
+    
     <script>
+      var webhooksLog = document.getElementById("webhooks_log");
+      
+      // make the empty code block a little pretty to start
+      var codeBlock = 
+      
+      
       // as webhooks payloads come in from the server side via Socket.IO, we add them
       // to this `payloads` array. Vue.js takes care of updating the UI to show these
       // payloads in the console below the video.
@@ -52,61 +53,22 @@
         // would get logged to the demo page for everybody looking at it at that time.
         if (payload.visitor.id == Wistia.visitorKey.value()) {
           // Prepend the latest payload to the array of payloads.
-          // The "2" here makes the output get pretty-printed with 2 spaces for indentation.
-          // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#The_space_argument
-          payloads.unshift(JSON.stringify(payload, null, 2));
+          payloads.unshift(payload);
           showPayloads(payloads);
         }
       });
       
       function showPayloads(payloads) {
-        var webhooksLog = document.getElementsById("webhooks_log");
+        console.log("showing payloads");
         webhooksLog.innerHTML = `<h3>Here are the payloads</h3>`;
         var code = document.createElement("code");
+        code.className = "log"
         var pre = document.createElement("pre");
         pre.innerHTML = JSON.stringify(payloads, null, 2);
         code.appendChild(pre)
         webhooksLog.appendChild(code);
-        highlight.highlightBlock(code);
+        hljs.highlightBlock(code);
       }
-
-
-      // Get syntax highlighting working with Vue.js
-      // credit: https://www.metachris.com/2017/02/vuejs-syntax-highlighting-with-highlightjs/
-      // Vue.directive('highlightjs', {
-      //   deep: true,
-      //   bind: function (el, binding) {
-      //     // on first bind, highlight all targets
-      //     let targets = el.querySelectorAll('code')
-      //     targets.forEach((target) => {
-      //       // if a value is directly assigned to the directive, use this
-      //       // instead of the element content.
-      //       if (binding.value) {
-      //         target.textContent = binding.value
-      //       }
-      //       hljs.highlightBlock(target)
-      //     })
-      //   },
-      //   componentUpdated: function (el, binding) {
-      //     // after an update, re-fill the content and then highlight
-      //     let targets = el.querySelectorAll('code')
-      //     targets.forEach((target) => {
-      //       if (binding.value) {
-      //         target.textContent = binding.value
-      //         hljs.highlightBlock(target)
-      //       }
-      //     })
-      //   }
-      // })
-
-      // This is where we tell Vue.js which data to display in the UI.
-      // Vue takes care of updating the UI as that data changes. Thanks, Vue!
-      var app = new Vue({
-        el: '#webhooks_log',
-        data: {
-          payloads: payloads
-        }
-      })
     </script>
     
     <!-- The Glitch button -->
