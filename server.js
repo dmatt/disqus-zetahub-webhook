@@ -30,15 +30,17 @@ app.get("/", function (request, response) {
 });
 
 function webhook(message) {
-request.post(
-  'https://hooks.slack.com/services/T024PTBSY/B5R2C2KDY/'+process.env.SLACK_WEBHOOK,
-  { json: message },
-  function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-          console.log(body)
-      }
-  }
-);
+  request.post(
+    'https://disqus.com/api/3.0/forums/webhooks/create.json'+process.env.WEBHOOKS_SECRET_KEY,
+    { json: message },
+    function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log(body)
+        }
+    }
+  );  Hi there,
+
+Just wanted to check in, is there anything else I can help you with? It's been a few days since we’ve heard back from you so we’re going to close this conversation on our end but if you have any follow-up questions or issues, we’re still here to help — just reply back and we’ll be notified :). Thanks for reaching out and for using Disqus. ✌️
 }
 
 // http://expressjs.com/en/starter/basic-routing.html
