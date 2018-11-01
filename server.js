@@ -13,7 +13,7 @@ var io = require('socket.io')(http);
 const request = require('request');
 
 http.listen(process.env.PORT || 3000, function(){
-  console.log('listening on:', process.env.PORT);
+  console.log('listening');
 });
 
 // http://expressjs.com/en/starter/static-files.html
@@ -32,16 +32,20 @@ app.get("/", function (request, response) {
 const message = {
   "secret_key": process.env.WEBHOOKS_SECRET_KEY,
   "forum": "disqus-demo-pro",
-
+  "url": "https://disqus-webhook-example.glitch.me/webhooks"
 }
 
 function webhook(message) {
+  console.log("webhook function")
   request.post(
     'https://disqus.com/api/3.0/forums/webhooks/create.json',
     { json: message },
     function (error, response, body) {
+        console.log("webhook callback function")
         if (!error && response.statusCode == 200) {
             console.log(body)
+        } else {
+          console.log(body)
         }
     }
   );  
@@ -49,8 +53,8 @@ function webhook(message) {
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/create", function (request, response) {
-  
- 
+  console.log("create page GET")
+  webhook(message)
 });
 
 // Listen for incoming webhooks.
