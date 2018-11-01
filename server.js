@@ -10,6 +10,7 @@ var upload = multer(); // for parsing multipart/form-data
 const {getHash} = require('./signature-verification')
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
+const request = require('request');
 
 http.listen(process.env.PORT, function(){
   console.log('listening on:', process.env.PORT);
@@ -26,6 +27,24 @@ app.use(bodyParser.raw(options));
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
+});
+
+function webhook(message) {
+request.post(
+  'https://hooks.slack.com/services/T024PTBSY/B5R2C2KDY/'+process.env.SLACK_WEBHOOK,
+  { json: message },
+  function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+          console.log(body)
+      }
+  }
+);
+}
+
+// http://expressjs.com/en/starter/basic-routing.html
+app.get("/create", function (request, response) {
+  
+ 
 });
 
 // Listen for incoming webhooks.
