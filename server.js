@@ -30,13 +30,14 @@ app.get("/", function (request, response) {
 });
 
 const message = {
-  "secret_key": process.env.WEBHOOKS_SECRET_KEY,
+  "secret": process.env.WEBHOOKS_SECRET_KEY,
   "forum": "disqus-demo-pro",
   "url": "https://disqus-webhook-example.glitch.me/webhooks"
 }
 
 function webhook(message) {
   console.log("webhook function")
+  console.log(message)
   request.post(
     'https://disqus.com/api/3.0/forums/webhooks/create.json',
     { json: message },
@@ -48,7 +49,7 @@ function webhook(message) {
           console.log(body)
         }
     }
-  );  
+  );
 }
 
 // http://expressjs.com/en/starter/basic-routing.html
