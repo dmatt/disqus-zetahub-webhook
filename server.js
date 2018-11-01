@@ -7,12 +7,12 @@ var app = express();
 var bodyParser = require('body-parser');
 var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
-const {getHash} = require('./signature-verification')
-var http = require('http').Server(app)
-var io = require('socket.io')(http)
+const {getHash} = require('./signature-verification');
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 const request = require('request');
 
-http.listen(process.env.PORT, function(){
+http.listen(process.env.PORT || 3000, function(){
   console.log('listening on:', process.env.PORT);
 });
 
@@ -29,18 +29,22 @@ app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
+const message = {
+  "secret_key": process.env.WEBHOOKS_SECRET_KEY,
+  "forum": "disqus-demo-pro",
+
+}
+
 function webhook(message) {
   request.post(
-    'https://disqus.com/api/3.0/forums/webhooks/create.json'+process.env.WEBHOOKS_SECRET_KEY,
+    'https://disqus.com/api/3.0/forums/webhooks/create.json',
     { json: message },
     function (error, response, body) {
         if (!error && response.statusCode == 200) {
             console.log(body)
         }
     }
-  );  Hi there,
-
-Just wanted to check in, is there anything else I can help you with? It's been a few days since we’ve heard back from you so we’re going to close this conversation on our end but if you have any follow-up questions or issues, we’re still here to help — just reply back and we’ll be notified :). Thanks for reaching out and for using Disqus. ✌️
+  );  
 }
 
 // http://expressjs.com/en/starter/basic-routing.html
