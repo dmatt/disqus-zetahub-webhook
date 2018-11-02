@@ -33,6 +33,8 @@ const message = {
 
 }
 
+// http://sentry.local.disqus.net/disqus/default/group/681957/
+
 function webhook(message) {
   console.log("webhook function")
   console.log(message)
@@ -65,7 +67,7 @@ app.get("/create", function (request, response) {
 app.post("/webhooks", upload.array(), function (request, response, next) {
 
   const headers = request.headers
-  const wistiaSignature = headers['X-Hub-Signature']
+  const wistiaSignature = headers['x-hub-signature']
   console.log("wistia signature: ", wistiaSignature)
   
   const requestBody = request.body
