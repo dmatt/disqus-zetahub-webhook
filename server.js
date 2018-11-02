@@ -5,8 +5,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var multer = require('multer'); // v1.0.5
-var upload = multer(); // for parsing multipart/form-data
+
 const {getHash} = require('./signature-verification');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -64,14 +63,13 @@ app.get("/create", function (request, response) {
 });
 
 // Listen for incoming webhooks.
-app.post("/webhooks", upload.array(), function (request, response, next) {
+app.post("/webhooks", function (request, response, next) {
 
   const headers = request.headers
   const wistiaSignature = headers['x-hub-signature']
   console.log("wistia signature: ", wistiaSignature)
   
   const requestBody = request.body
-  console.log("request", request)
   const computedHash = getHash(requestBody)
   console.log("The computed hash is: ", computedHash)
   
