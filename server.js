@@ -62,7 +62,7 @@ app.get("/create", function (request, response) {
   webhook(message)
 });
 
-// Listen for incoming webhooks.
+// Listen for incoming create webhook requests
 app.post("/create-webhook", function (request, response, next) {
 
   const headers = request.headers
@@ -73,8 +73,7 @@ app.post("/create-webhook", function (request, response, next) {
   const computedHash = getHash(requestBody)
   console.log("The computed hash is: ", computedHash)
   
-  
-  // Verify that the webhooks are legit, using the secret key
+  // Verify that the webhook we want to create is legit, using the secret key
   if (disqusSignature === computedHash) {
     console.log("Signature looks good!")
     
@@ -93,7 +92,7 @@ app.post("/create-webhook", function (request, response, next) {
 
     // Be sure to send a 200 OK response, to let Wistia know that all is well. 
     // Otherwise, Wistia will continue sending webhooks your way a few unnecessary times
-    response.sendStatus(200)
+    response.status(200).send(JSON.parse(requestBody).challenge)
     
   } else {
     console.log("Signature doesn't match. Ruh-roh.")
