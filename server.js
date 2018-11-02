@@ -37,7 +37,7 @@ function webhook(message) {
   console.log("webhook function")
   console.log(message)
   request.post(
-    'https://disqus.com/api/3.0/forums/webhooks/create.json?"
+    "https://disqus.com/api/3.0/forums/webhooks/create.json?"
     +"secret="+process.env.WEBHOOKS_SECRET_KEY
     +"&api_key="+process.env.WEBHOOKS_PUBLIC_KEY
     +"&access_token="+process.env.WEBHOOKS_ACCESS_TOKEN
@@ -65,7 +65,7 @@ app.get("/create", function (request, response) {
 app.post("/webhooks", upload.array(), function (request, response, next) {
 
   const headers = request.headers
-  const wistiaSignature = headers['x-wistia-signature']
+  const wistiaSignature = headers['X-Hub-Signature']
   console.log("wistia signature: ", wistiaSignature)
   
   const requestBody = request.body
