@@ -34,32 +34,20 @@ const message = {
 
 // http://sentry.local.disqus.net/disqus/default/group/681957/
 
-//createSubscription()
-
-request({
-  url: 'https://disqus.com/api/3.0/forums/webhooks/create.json',
-  json: {
-    secret: process.env.WEBHOOKS_SECRET_KEY,
-    api_key: process.env.WEBHOOKS_PUBLIC_KEY,
-    access_token: process.env.WEBHOOKS_ACCESS_TOKEN,
-    forum: "disqus-demo-pro",
-    url: 
-  }
-}, function(error, response, body){
-  console.log(body);
-});
+createSubscription()
 
 function createSubscription() {
   console.log("webhook function")
-  request.post(
-    "https://disqus.com/api/3.0/forums/webhooks/create.json?"
-    +"secret="+process.env.WEBHOOKS_SECRET_KEY
-    +"&api_key="+process.env.WEBHOOKS_PUBLIC_KEY
-    +"&access_token="+process.env.WEBHOOKS_ACCESS_TOKEN
-    +"&forum=disqus-demo-pro"
-    +"&url=https://disqus-webhook-example.glitch.me/webhook",
-    { json: null },
-    function (error, response, body) {
+  request.post({
+    url: 'https://disqus.com/api/3.0/forums/webhooks/create.json',
+    json: {
+      secret: process.env.WEBHOOKS_SECRET_KEY,
+      api_key: process.env.WEBHOOKS_PUBLIC_KEY,
+      access_token: process.env.WEBHOOKS_ACCESS_TOKEN,
+      forum: "disqus-demo-pro",
+      url: "https://disqus-webhook-example.glitch.me/webhook"
+    }
+  }, function (error, response, body) {
         console.log("webhook callback function")
         if (!error && response.statusCode == 200) {
             console.log(body)
