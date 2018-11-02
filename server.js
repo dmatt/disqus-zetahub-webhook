@@ -57,7 +57,7 @@ function webhook(message) {
 }
 
 // http://expressjs.com/en/starter/basic-routing.html
-app.get("/create", function (request, response) {
+app.get("/create-webhook", function (request, response) {
   console.log("create page GET")
   webhook(message)
 });
