@@ -2,8 +2,8 @@
 <html>
   <head>
     <title>Wistia Webhooks Demo</title>
-    <meta name="description" content="How to use Wistia webhooks to build an app that hears about events in Wistia as they happen">
-    <link id="favicon" rel="icon" href="https://cdn.glitch.com/fa923940-f3fc-440e-a0c8-6ba5804bf6d0%2Ffavicon.ico?1490716873266" type="image/x-icon">
+    <meta name="description" content="How to use Disqus webhooks to build an app that subscribes to post and vote events in Disqus as they happen">
+        <link rel="shortcut icon" href="//a.disquscdn.com/1540426646/img/favicon16-32.ico" type="image/vnd.microsoft.icon">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,16 +13,11 @@
     
     <!-- Welcome note -->
     <p>
-      Hi! This here's a demo of <a href="https://wistia.com/doc/webhooks">Wistia Webhooks</a>.
+      Hi! This here's a demo of <a href="https://disqus.com/api/docs/forums/webhooks/">Disqus Webhooks</a>.
     </p>
     <p>
-      Play the video below to see webhooks in action. Then, click the "Remix on Glitch" button to see the source and make it your own.
+      Leave a comment or up/downvote below. Then, click the "Remix on Glitch" button to see the source and make it your own.
     </p>
-    
-    <!-- Standard (aka async) embed -->
-    <script src="https://fast.wistia.com/embed/medias/t7clqlza0a.jsonp" async></script>
-    <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
-    <div class="wistia_embed wistia_async_t7clqlza0a" style="height:360px;width:640px">&nbsp;</div>
     
     <div id="webhooks_log">
       <pre>
