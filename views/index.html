@@ -16,47 +16,16 @@
     <!-- highlight.js -->
     <link rel="stylesheet" href="highlighting.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/highlight.min.js"></script>
-    
-    <script>
-      var webhooksLog = document.getElementById("webhooks_log");
-      
-      // make the empty code block a little pretty to start
-      var codeBlock = document.getElementsByTagName("code")[0]
-      hljs.highlightBlock(codeBlock);
-      
-      // as webhooks payloads come in from the server side via Socket.IO, we add them
-      // to this `payloads` array, then stringify that data and show it on the page.
-      window.payloads = [];
-      var socket = io();
-      socket.on('event', function(payload){
-        payloads.unshift(payload);
-        showPayloads(payloads);
-      });
-      
-      function showPayloads(payloads) {
-        webhooksLog.innerHTML = `<h3>Here are the payloads</h3>`;
-        var code = document.createElement("code");
-        code.className = "log"
-        var pre = document.createElement("pre");
-        pre.innerHTML = JSON.stringify(payloads, null, 2);
-        code.appendChild(pre)
-        webhooksLog.appendChild(code);
-        hljs.highlightBlock(code);
-      }
-    </script>
-    
     <!-- The Glitch button -->
     <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
     <script src="https://button.glitch.me/button.js"></script>
-    <!-- A little script to add a "More [Team Name] Projects" button to that 👆 -->
-    <script src="https://team-projects-button.glitch.me/js/team-projects-button.js"></script>
-        <div id="container">
-              <!-- Welcome note -->
+    <div id="container">
+    <!-- Welcome note -->
     <p>
       Hi! This here's a demo of <a href="https://disqus.com/api/docs/forums/webhooks/">Disqus Webhooks</a>.
     </p>
     <p>
-      Leave a comment or up/downvote below. Then, click the "Remix on Glitch" button to see the source and make it your own.
+      Leave a comment or up/downvote below and wait for webhook data to display in code-block (can take 5-10 minutes). Click the "Remix on Glitch" button to see the source and make it your own.
     </p>
               
     <div id="webhooks_log">
@@ -65,9 +34,7 @@
         </code>
       </pre>
     </div>
-    
             <h2>Man Lands on Moon</h2>
-
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,
                 sed do eiusmod tempor incididunt ut labore et dolore magna
                 aliqua. Ut enim ad minim veniam, quis nostrud exercitation
@@ -113,10 +80,55 @@
                 occaecat cupidatat non proident, sunt in culpa qui officia
                 deserunt mollit anim id est laborum.</p>
           <div id="disqus_thread"></div>
-
+          <script>
+                  /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    
+    var disqus_config = function () {
+        this.page.url = 'https://disqus-webhook-example.glitch.me/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'disqus-webhook-example'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.title = 'disqus-webhook-example';
+    };
+    
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        
+        s.src = '//disqus-demo-pro.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();      
           </script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>          
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<script>
+      var webhooksLog = document.getElementById("webhooks_log");
+      
+      // make the empty code block a little pretty to start
+      var codeBlock = document.getElementsByTagName("code")[0]
+      hljs.highlightBlock(codeBlock);
+      
+      // as webhooks payloads come in from the server side via Socket.IO, we add them
+      // to this `payloads` array, then stringify that data and show it on the page.
+      window.payloads = [];
+      var socket = io();
+      socket.on('event', function(payload){
+        payloads.unshift(payload);
+        showPayloads(payloads);
+      });
+      
+      function showPayloads(payloads) {
+        webhooksLog.innerHTML = `<h3>Here are the payloads</h3>`;
+        var code = document.createElement("code");
+        code.className = "log"
+        var pre = document.createElement("pre");
+        pre.innerHTML = JSON.stringify(payloads, null, 2);
+        code.appendChild(pre)
+        webhooksLog.appendChild(code);
+        hljs.highlightBlock(code);
+      }
+    </script>      
         </div>
-
   </body>
 </html>
