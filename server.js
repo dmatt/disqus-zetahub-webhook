@@ -43,7 +43,7 @@ function webhook(message) {
     +"&api_key="+process.env.WEBHOOKS_PUBLIC_KEY
     +"&access_token="+process.env.WEBHOOKS_ACCESS_TOKEN
     +"&forum=disqus-demo-pro"
-    +"&url=https://disqus-webhook-example.glitch.me/webhooks",
+    +"&url=https://disqus-webhook-example.glitch.me/create-webhook",
     { json: message },
     function (error, response, body) {
         console.log("webhook callback function")
@@ -63,11 +63,11 @@ app.get("/create", function (request, response) {
 });
 
 // Listen for incoming webhooks.
-app.post("/webhooks", function (request, response, next) {
+app.post("/create-webhook", function (request, response, next) {
 
   const headers = request.headers
-  const wistiaSignature = headers['x-hub-signature']
-  console.log("wistia signature: ", wistiaSignature)
+  const disqusSignature = headers['x-hub-signature'].replace("sha512=","")
+  console.log("disqus signature: ", disqusSignature)
   
   const requestBody = request.body
   const computedHash = getHash(requestBody)
@@ -75,22 +75,25 @@ app.post("/webhooks", function (request, response, next) {
   
   
   // Verify that the webhooks are legit, using the secret key
-  if (wistiaSignature === computedHash) {
+  if (disqusSignature === computedHash) {
     console.log("Signature looks good!")
     
-    const events = JSON.parse(requestBody).events
+    console.log("👤", JSON.parse(requestBody))
     // There can be multiple events. They're always in an array even if there's only one.
     // https://wistia.com/doc/webhooks#request_body
+    
+    /*
     events.forEach(function (event) {
       const payload = event.payload
       console.log(payload)
       // send this event payload to the client side with socket.io
       io.emit('event', payload)
     });
+    */
 
     // Be sure to send a 200 OK response, to let Wistia know that all is well. 
     // Otherwise, Wistia will continue sending webhooks your way a few unnecessary times
-    response.sendStatus(200) 
+    response.sendStatus(200)
     
   } else {
     console.log("Signature doesn't match. Ruh-roh.")
