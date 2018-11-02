@@ -71,6 +71,7 @@ app.post("/webhooks", upload.array(), function (request, response, next) {
   console.log("wistia signature: ", wistiaSignature)
   
   const requestBody = request.body
+  console.log("request", request)
   const computedHash = getHash(requestBody)
   console.log("The computed hash is: ", computedHash)
   
