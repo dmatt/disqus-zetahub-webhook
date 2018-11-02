@@ -1,10 +1,5 @@
 /* styles */
 
-* {
-  font-family: monospace;
-}
-
-
 #webhooks_log {
   width: 640px;
 }
@@ -14,14 +9,27 @@
   overflow: scroll;
 }
 
-/* footer */
-
-footer {
-  border-top: 1px solid #c3c3c3;
-  margin-top: 30px;
-  padding-top: 30px;
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    background-color: #f0f0f0;
+    color: #333;
 }
 
-p {
-  max-width: 90%;
+a:link, a:visited, a:active {
+    color: #0076CC;
+}
+
+#container {
+    width: 90%;
+    max-width: 720px;
+    margin: 1em auto;
+}
+
+#disqus_thread {
+    padding: 2em;
+    background-color: #fff;
+    border: 1px solid #aaa;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
