@@ -34,17 +34,18 @@ const message = {
 
 // http://sentry.local.disqus.net/disqus/default/group/681957/
 
-function webhook(message) {
+//createSubscription()
+
+function createSubscription() {
   console.log("webhook function")
-  console.log(message)
   request.post(
     "https://disqus.com/api/3.0/forums/webhooks/create.json?"
     +"secret="+process.env.WEBHOOKS_SECRET_KEY
     +"&api_key="+process.env.WEBHOOKS_PUBLIC_KEY
     +"&access_token="+process.env.WEBHOOKS_ACCESS_TOKEN
     +"&forum=disqus-demo-pro"
-    +"&url=https://disqus-webhook-example.glitch.me/create-webhook",
-    { json: message },
+    +"&url=https://disqus-webhook-example.glitch.me/webhook",
+    { json: null },
     function (error, response, body) {
         console.log("webhook callback function")
         if (!error && response.statusCode == 200) {
@@ -56,14 +57,8 @@ function webhook(message) {
   );
 }
 
-// http://expressjs.com/en/starter/basic-routing.html
-app.get("/create-webhook", function (request, response) {
-  console.log("create page GET")
-  webhook(message)
-});
-
 // Listen for incoming create webhook requests
-app.post("/create-webhook", function (request, response, next) {
+app.post("/webhook", function (request, response, next) {
 
   const headers = request.headers
   const disqusSignature = headers['x-hub-signature'].replace("sha512=","")
@@ -73,7 +68,7 @@ app.post("/create-webhook", function (request, response, next) {
   const computedHash = getHash(requestBody)
   console.log("The computed hash is: ", computedHash)
   
-  // Verify that the webhook we want to create is legit, using the secret key
+  // Verify that the incoming webhook is legit, using the secret key this server provided during creation
   if (disqusSignature === computedHash) {
     console.log("Signature looks good!")
     
@@ -81,14 +76,8 @@ app.post("/create-webhook", function (request, response, next) {
     // There can be multiple events. They're always in an array even if there's only one.
     // https://wistia.com/doc/webhooks#request_body
     
-    /*
-    events.forEach(function (event) {
-      const payload = event.payload
-      console.log(payload)
-      // send this event payload to the client side with socket.io
-      io.emit('event', payload)
-    });
-    */
+    // send the payload to the client side with socket.io
+    io.emit('event', JSON.parse(requestBody))
 
     // Be sure to send a 200 OK response, to let Wistia know that all is well. 
     // Otherwise, Wistia will continue sending webhooks your way a few unnecessary times
