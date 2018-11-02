@@ -36,6 +36,19 @@ const message = {
 
 //createSubscription()
 
+request({
+  url: 'https://disqus.com/api/3.0/forums/webhooks/create.json',
+  json: {
+    secret: process.env.WEBHOOKS_SECRET_KEY,
+    api_key: process.env.WEBHOOKS_PUBLIC_KEY,
+    access_token: process.env.WEBHOOKS_ACCESS_TOKEN,
+    forum: "disqus-demo-pro",
+    url: 
+  }
+}, function(error, response, body){
+  console.log(body);
+});
+
 function createSubscription() {
   console.log("webhook function")
   request.post(
