@@ -28,10 +28,6 @@ app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
-const message = {
-
-}
-
 // http://sentry.local.disqus.net/disqus/default/group/681957/
 
 /*
@@ -56,7 +52,7 @@ const message = {
   );
 */
 
-// Uncomment
+// Uncomment to restart glitch app and create a subscription
 // createSubscription()
 
 function createSubscription() {
@@ -84,6 +80,7 @@ function createSubscription() {
 app.post("/webhook", function (request, response, next) {
 
   const headers = request.headers
+  // the header from Disqus is prepended with `sha512=` so remove this
   const disqusSignature = headers['x-hub-signature'].replace("sha512=","")
   console.log("disqus signature: ", disqusSignature)
   
@@ -96,8 +93,7 @@ app.post("/webhook", function (request, response, next) {
     console.log("Signature looks good!")
     
     console.log("👤", JSON.parse(requestBody))
-    // There can be multiple events. They're always in an array even if there's only one.
-    // https://wistia.com/doc/webhooks#request_body
+    // Disqus webhook documentation https://disqus.com/api/docs/forums/webhooks/
     
     // send the payload to the client side with socket.io
     io.emit('event', JSON.parse(requestBody))
