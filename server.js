@@ -11,6 +11,11 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 const request = require('request');
 
+var jwt = require('jwt-simple');
+
+var payload = { foo: 'bar' };
+var secret = 'xxx';
+
 http.listen(process.env.PORT || 3000, function(){
   console.log('listening');
 });

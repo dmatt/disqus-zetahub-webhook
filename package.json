@@ -7,7 +7,8 @@
     "express": "^4.15.2",
     "body-parser": "^1.17.1",
     "socket.io": "^1.7.3",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "jwt-simple": "^0.5.5"
   },
   "devDependencies": {},
   "scripts": {
