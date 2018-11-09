@@ -2,19 +2,16 @@
 // where your node app starts
 
 // init project
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
+let express = require('express');
+let app = express();
+let bodyParser = require('body-parser');
 
 const {getHash} = require('./signature-verification');
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+let http = require('http').Server(app);
+let io = require('socket.io')(http);
 const request = require('request');
 
-var jwt = require('jwt-simple');
-
-var payload = { foo: 'bar' };
-var secret = 'xxx';
+let jwt = require('jwt-simple');
 
 http.listen(process.env.PORT || 3000, function(){
   console.log('listening');
@@ -32,6 +29,9 @@ app.use(bodyParser.raw(options));
 app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
+
+let payload = { foo: 'bar' };
+let secret = 'xxx';
 
 // http://sentry.local.disqus.net/disqus/default/group/681957/
 
