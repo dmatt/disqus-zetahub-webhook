@@ -63,7 +63,7 @@ let authorizePayload = {
 }
 
 // Uncomment to get ZetaHub JWT token for endpoints that require auth 
-// authorizeZetaHub()
+authorizeZetaHub()
 
 function authorizeZetaHub() {
   console.log("authorizeZetaHub function")
