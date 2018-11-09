@@ -11,8 +11,6 @@ let http = require('http').Server(app);
 let io = require('socket.io')(http);
 const request = require('request');
 
-let jwt = require('jwt-simple');
-
 http.listen(process.env.PORT || 3000, function(){
   console.log('listening');
 });
@@ -29,17 +27,6 @@ app.use(bodyParser.raw(options));
 app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
-
-let payload = {
-  "client_id": "FP3iP1blgJbdmmSRYS1I96byb1nXryTs", 
-  "username": process.env.ZETAHUB_USERNAME,
-  "password": process.env.ZETAHUB_PASSWORD,
-  "connection": "Username-Password-Authentication",
-  "grant_type": "password",
-  "scope":  "openid app_metadata name email user_id"
-};
-
-let secret = 'xxx';
 
 // http://sentry.local.disqus.net/disqus/default/group/681957/
 
@@ -65,13 +52,14 @@ let secret = 'xxx';
   );
 */
 
+// Uncomment to get ZetaHub JWT token for endpoints that require auth 
 // authorizeZetaHub()
 
 function authorizeZetaHub() {
   console.log("authorizeZetaHub function")
   request.post(
     "https://boomtrain.auth0.com/oauth/ro?"
-    +"client_id="+"FP3iP1blgJbdmmSRYS1I96byb1nXryTs"
+    +"client_id=FP3iP1blgJbdmmSRYS1I96byb1nXryTs"
     +"&username="+process.env.ZETAHUB_USERNAME
     +"&password="+process.env.ZETAHUB_PASSWORD
     +"&connection=Username-Password-Authentication"
@@ -79,7 +67,7 @@ function authorizeZetaHub() {
     +"&scope=openid app_metadata name email user_id",
     { json: null },
     function (error, response, body) {
-        console.log("webhook callback function")
+        console.log("authorizeZetaHub callback function")
         if (!error && response.statusCode == 200) {
             console.log(body)
         } else {
