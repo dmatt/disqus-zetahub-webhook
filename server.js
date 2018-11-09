@@ -104,6 +104,12 @@ function createSubscription() {
   );
 }
 
+let sendToZetaHub = (event) => {
+  let
+  
+
+}
+
 // Listen for incoming create webhook requests
 app.post("/webhook", function (request, response, next) {
 
@@ -127,7 +133,7 @@ app.post("/webhook", function (request, response, next) {
     io.emit('event', JSON.parse(requestBody))
     
     // send the payload to the ZetaHub callback
-    io.emit('event', JSON.parse(requestBody))
+    sendToZetaHub(JSON.parse(requestBody));
 
     // Be sure to send a 200 OK response, to let Wistia know that all is well. 
     // Otherwise, Wistia will continue sending webhooks your way a few unnecessary times
