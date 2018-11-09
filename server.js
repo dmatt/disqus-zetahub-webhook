@@ -63,7 +63,7 @@ function createSubscription() {
     +"&api_key="+process.env.WEBHOOKS_PUBLIC_KEY
     +"&access_token="+process.env.WEBHOOKS_ACCESS_TOKEN
     +"&forum=disqus-demo-pro"
-    +"&url=https://disqus-webhook-example.glitch.me/webhook",
+    +"&url=https://disqus-zetahub-webhook-example.glitch.me/webhook",
     { json: null },
     function (error, response, body) {
         console.log("webhook callback function")
