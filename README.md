@@ -8,7 +8,7 @@ Disqus Webhooks Example: start consuming [Disqus webhooks]() in _no time_*
 Remixing instructions:
 ----------------------
 
-1. Edit
+1. Edit the parameters in `🗝.env` and in the url in `server.js`
 
 ```
     "https://disqus.com/api/3.0/forums/webhooks/create.json?"
@@ -19,9 +19,11 @@ Remixing instructions:
     +"&url=https://disqus-webhook-example.glitch.me/webhook",
 ```
 
-2. uncomment `// createSubscription()` to create 1 subscription
+2. uncomment `// createSubscription()` to create a webhook subscription for the url specified with `url`
 
 
 That's it! 🎉
 
 **To see your webhooks roll in, click `"Show"` 👆 and leave a comment or vote in Disqus embed.**
+
+This example remixed from [wistia-webhooks-example](https://glitch.com/~wistia-webhooks-example)

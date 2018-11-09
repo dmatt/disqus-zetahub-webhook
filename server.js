@@ -35,7 +35,7 @@ const message = {
 // http://sentry.local.disqus.net/disqus/default/group/681957/
 
 /*
-// todo: figure out how to do request correctly
+// TODO: do this correctly with `request`
   request.post({
     url: 'https://disqus.com/api/3.0/forums/webhooks/create.json',
     json: {
@@ -56,6 +56,7 @@ const message = {
   );
 */
 
+// Uncomment
 // createSubscription()
 
 function createSubscription() {
