@@ -104,10 +104,30 @@ function createSubscription() {
   );
 }
 
-let sendToZetaHub = (event) => {
-  let
-  
+let createUserPayload = {
+    "client_id": "FP3iP1blgJbdmmSRYS1I96byb1nXryTs",
+    "username": process.env.ZETAHUB_USERNAME,
+    "password": process.env.ZETAHUB_PASSWORD,
+    "connection": "Username-Password-Authentication",
+    "scope": "openid app_metadata name email user_id",
+    "grant_type": "password"
+}
 
+let sendToZetaHub = (event) => {
+  console.log("sendToZetaHub function")
+  request.post(
+    "https://boomtrain.auth0.com/oauth/ro",
+    { json: createUserPayload },
+    function (error, response, body) {
+        console.log("sendToZetaHub callback function")
+        if (!error && response.statusCode == 200) {
+            console.log(body)
+        } else {
+          console.log(body)
+        }
+    }
+  );  
+  console.log(event)
 }
 
 // Listen for incoming create webhook requests
