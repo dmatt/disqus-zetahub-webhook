@@ -52,6 +52,8 @@ app.get("/", function (request, response) {
   );
 */
 
+// Uncomment to get ZetaHub JWT token for endpoints that require auth 
+// authorizeZetaHub()
 
 let authorizePayload = {
     "client_id": "FP3iP1blgJbdmmSRYS1I96byb1nXryTs",
@@ -61,9 +63,6 @@ let authorizePayload = {
     "scope": "openid app_metadata name email user_id",
     "grant_type": "password"
 }
-
-// Uncomment to get ZetaHub JWT token for endpoints that require auth 
-// authorizeZetaHub()
 
 function authorizeZetaHub() {
   console.log("authorizeZetaHub function")
@@ -125,6 +124,9 @@ app.post("/webhook", function (request, response, next) {
     // Disqus webhook documentation https://disqus.com/api/docs/forums/webhooks/
     
     // send the payload to the client side with socket.io
+    io.emit('event', JSON.parse(requestBody))
+    
+    // send the payload to the ZetaHub callback
     io.emit('event', JSON.parse(requestBody))
 
     // Be sure to send a 200 OK response, to let Wistia know that all is well. 
