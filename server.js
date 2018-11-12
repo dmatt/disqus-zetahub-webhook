@@ -98,7 +98,7 @@ let payload = {
 
 let postRequestOptions = {
   method: 'post',
-  qs: payload,
+  json: payload,
   url: "https://disqus.com/api/3.0/forums/webhooks/create.json",
 }
 
