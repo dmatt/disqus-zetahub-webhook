@@ -33,6 +33,12 @@ app.get("/", function (request, response) {
 // http://sentry.local.disqus.net/disqus/default/group/681957/
 
 /*
+
+    json: 
+    
+    
+
+
 // TODO: do this correctly with `request`
   request.post({
     url: 'https://disqus.com/api/3.0/forums/webhooks/create.json',
@@ -82,19 +88,21 @@ function authorizeZetaHub() {
   );
 }
 
-// Uncomment to restart glitch app and create a subscription
-// createSubscription()
 
-function createSubscription() {
+
+let webhookSubscriptionPayload = {
+  "secret": process.env.WEBHOOKS_SECRET_KEY,
+  "api_key": process.env.WEBHOOKS_PUBLIC_KEY,
+  "access_token": process.env.WEBHOOKS_ACCESS_TOKEN,
+  "forum": "disqus-demo-pro",
+  "url": "https://disqus-webhook-example.glitch.me/webhook"
+}
+
+let createSubscription = () => {
   console.log("webhook function")
   request.post(
-    "https://disqus.com/api/3.0/forums/webhooks/create.json?"
-    +"secret="+process.env.WEBHOOKS_SECRET_KEY
-    +"&api_key="+process.env.WEBHOOKS_PUBLIC_KEY
-    +"&access_token="+process.env.WEBHOOKS_ACCESS_TOKEN
-    +"&forum=disqus-demo-pro"
-    +"&url=https://disqus-zetahub-webhook-example.glitch.me/webhook",
-    { json: null },
+    "https://disqus.com/api/3.0/forums/webhooks/create.json",
+    { json: webhookSubscriptionPayload },
     function (error, response, body) {
         console.log("webhook callback function")
         if (!error && response.statusCode == 200) {
@@ -105,6 +113,9 @@ function createSubscription() {
     }
   );
 }
+
+// Uncomment to restart glitch app and create a subscription
+// createSubscription()
 
 let createUserPayload = {
     "client_id": "FP3iP1blgJbdmmSRYS1I96byb1nXryTs",
