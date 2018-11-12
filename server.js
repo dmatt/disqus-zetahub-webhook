@@ -98,24 +98,19 @@ let payload = {
 
 let postRequestOptions = {
   method: 'post',
-  json: payload,
+  json: true,
   url: "https://disqus.com/api/3.0/forums/webhooks/create.json",
+  body: JSON.stringify(payload)
 }
 
 let createSubscription = () => {
   console.log("webhook function")
-  request(postRequestOptions, function (error, response, body) {
+  request.post(postRequestOptions, function (error, response, body) {
         console.log("webhook callback function")
         if (!error && response.statusCode == 200) {
-            console.log(body)
+            console.log(response)
         } else {
-          console.log(body)
-          var headers = response.headers
-          var statusCode = response.statusCode
-          console.log('headers: ', headers)
-          console.log('statusCode: ', statusCode)
-          console.log('body: ', body)
-          console.log(response.headers['content-type'])
+          console.log(response)
         }
     }
   );
