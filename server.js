@@ -90,7 +90,8 @@ function authorizeZetaHub() {
 
 let payload = {
   "api_key": process.env.WEBHOOKS_PUBLIC_KEY,
-  "secret": process.env.WEBHOOKS_SECRET_KEY,
+  "secret_key": process.env.WEBHOOKS_SECRET_KEY,
+  "secret": process.env.WEBHOOKS_SECRET,
   "access_token": process.env.WEBHOOKS_ACCESS_TOKEN,
   "forum": "disqus-demo-pro",
   "url": "https://disqus-webhook-example.glitch.me/webhook"
@@ -98,22 +99,24 @@ let payload = {
 
 let postRequestOptions = {
   method: 'post',
-  body: postData,
+  body: payload,
   json: true,
-  url: url
+  url: "https://disqus.com/api/3.0/forums/webhooks/create.json"
 }
 
 let createSubscription = () => {
   console.log("webhook function")
-  request.post(
-    "https://disqus.com/api/3.0/forums/webhooks/create.json",
-    {json: payload},
-    function (error, response, body) {
+  request(postRequestOptions, function (error, response, body) {
         console.log("webhook callback function")
         if (!error && response.statusCode == 200) {
             console.log(body)
         } else {
           console.log(body)
+          var headers = response.headers
+          var statusCode = response.statusCode
+          console.log('headers: ', headers)
+          console.log('statusCode: ', statusCode)
+          console.log('body: ', body)
         }
     }
   );
