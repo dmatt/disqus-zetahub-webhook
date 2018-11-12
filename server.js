@@ -90,7 +90,6 @@ function authorizeZetaHub() {
 
 let payload = {
   "api_key": process.env.WEBHOOKS_PUBLIC_KEY,
-  "secret_key": process.env.WEBHOOKS_SECRET_KEY,
   "secret": process.env.WEBHOOKS_SECRET,
   "access_token": process.env.WEBHOOKS_ACCESS_TOKEN,
   "forum": "disqus-demo-pro",
@@ -99,9 +98,8 @@ let payload = {
 
 let postRequestOptions = {
   method: 'post',
-  body: payload,
-  json: true,
-  url: "https://disqus.com/api/3.0/forums/webhooks/create.json"
+  qs: payload,
+  url: "https://disqus.com/api/3.0/forums/webhooks/create.json",
 }
 
 let createSubscription = () => {
@@ -117,13 +115,14 @@ let createSubscription = () => {
           console.log('headers: ', headers)
           console.log('statusCode: ', statusCode)
           console.log('body: ', body)
+          console.log(response.headers['content-type'])
         }
     }
   );
 }
 
 // Uncomment to restart glitch app and create a subscription
-// createSubscription()
+createSubscription()
 
 let createUserPayload = {
     "client_id": "FP3iP1blgJbdmmSRYS1I96byb1nXryTs",
