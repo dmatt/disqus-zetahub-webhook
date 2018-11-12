@@ -88,24 +88,19 @@ function authorizeZetaHub() {
   );
 }
 
-let payload = {
-  "api_key": process.env.WEBHOOKS_PUBLIC_KEY,
-  "secret": process.env.WEBHOOKS_SECRET,
-  "access_token": process.env.WEBHOOKS_ACCESS_TOKEN,
-  "forum": "disqus-demo-pro",
-  "url": "https://disqus-webhook-example.glitch.me/webhook"
-}
-
-let postRequestOptions = {
-  method: 'post',
-  json: true,
-  url: "https://disqus.com/api/3.0/forums/webhooks/create.json",
-  body: JSON.stringify(payload)
-}
-
 let createSubscription = () => {
   console.log("webhook function")
-  request.post(postRequestOptions, function (error, response, body) {
+  request({
+    uri: "https://disqus.com/api/3.0/forums/webhooks/create.json",
+    method: "POST",
+    form: {
+      api_key: process.env.WEBHOOKS_PUBLIC_KEY,
+      secret: process.env.WEBHOOKS_SECRET,
+      access_token: process.env.WEBHOOKS_ACCESS_TOKEN,
+      forum: 'disqus-demo-pro',
+      url: 'https://disqus-webhook-example.glitch.me/webhook'
+    }
+  }, function (error, response, body) {
         console.log("webhook callback function")
         if (!error && response.statusCode == 200) {
             console.log(response)
