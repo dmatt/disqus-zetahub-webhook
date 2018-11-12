@@ -30,39 +30,6 @@ app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
-// http://sentry.local.disqus.net/disqus/default/group/681957/
-
-/*
-
-    json: 
-    
-    
-
-
-// TODO: do this correctly with `request`
-  request.post({
-    url: 'https://disqus.com/api/3.0/forums/webhooks/create.json',
-    json: {
-      secret: process.env.WEBHOOKS_SECRET_KEY,
-      api_key: process.env.WEBHOOKS_PUBLIC_KEY,
-      access_token: process.env.WEBHOOKS_ACCESS_TOKEN,
-      forum: "disqus-demo-pro",
-      url: "https://disqus-webhook-example.glitch.me/webhook"
-    }
-  }, function (error, response, body) {
-        console.log("webhook callback function")
-        if (!error && response.statusCode == 200) {
-            console.log(body)
-        } else {
-          console.log(body)
-        }
-    }
-  );
-*/
-
-// Uncomment to get ZetaHub JWT token for endpoints that require auth 
-// authorizeZetaHub()
-
 let authorizePayload = {
     "client_id": "FP3iP1blgJbdmmSRYS1I96byb1nXryTs",
     "username": process.env.ZETAHUB_USERNAME,
@@ -72,7 +39,7 @@ let authorizePayload = {
     "grant_type": "password"
 }
 
-function authorizeZetaHub() {
+let authorizeZetaHub = () => {
   console.log("authorizeZetaHub function")
   request.post(
     "https://boomtrain.auth0.com/oauth/ro",
@@ -88,19 +55,19 @@ function authorizeZetaHub() {
   );
 }
 
+// Uncomment to get ZetaHub JWT token for endpoints that require auth 
+// authorizeZetaHub()
+
+// No idea why this is failing with `request({json: {}})` method
+
 let createSubscription = () => {
   console.log("webhook function")
-  request({
-    uri: "https://disqus.com/api/3.0/forums/webhooks/create.json",
-    method: "POST",
-    form: {
-      api_key: process.env.WEBHOOKS_PUBLIC_KEY,
-      secret: process.env.WEBHOOKS_SECRET,
-      access_token: process.env.WEBHOOKS_ACCESS_TOKEN,
-      forum: 'disqus-demo-pro',
-      url: 'https://disqus-webhook-example.glitch.me/webhook'
-    }
-  }, function (error, response, body) {
+  request.post("https://disqus.com/api/3.0/forums/webhooks/create.json?"
+    +"secret="+process.env.WEBHOOKS_SECRET_KEY
+    +"&api_key="+process.env.WEBHOOKS_PUBLIC_KEY
+    +"&access_token="+process.env.WEBHOOKS_ACCESS_TOKEN
+    +"&forum=disqus-demo-pro"
+    +"&url=https://disqus-webhook-example.glitch.me/webhook", function (error, response, body) {
         console.log("webhook callback function")
         if (!error && response.statusCode == 200) {
             console.log(response)
@@ -112,7 +79,7 @@ let createSubscription = () => {
 }
 
 // Uncomment to restart glitch app and create a subscription
-createSubscription()
+// createSubscription()
 
 let createUserPayload = {
     "client_id": "FP3iP1blgJbdmmSRYS1I96byb1nXryTs",
