@@ -1,4 +1,4 @@
-// 👀 TODO: function for creating ZH users Add http://docs.zetaglobal.com/
+// 👀 TODO: Set some attribites http://docs.zetaglobal.com/docs/create-or-update-a-person
 
 // server.js
 // where your node app starts
@@ -85,14 +85,15 @@ let createSubscription = () => {
 
 let sendToZetaHub = (event) => {
   console.log("sendToZetaHub function", event)
-  let email = 'dmatt+glitch@disqus.com';
+  let testEmail = 'dmatt+glitch@disqus.com';
   let createUserOptions = {
+    uri: `https://people.api.boomtrain.com/v1/person/disqus/${event.transformed_data.author.email}/`,
     headers: {
       'Authorization': `Bearer ${process.env.ZETAHUB_ACCESS_TOKEN}`
     },
-    body: { attributes: {}}
+    body: JSON.stringify({ attributes: {}})
   }
-  request.put("https://people.api.boomtrain.com/v1/person/disqus/dmatt+glitch@disqus.com/", createUserOptions, function (error, response, body) {
+  request.put(createUserOptions, function (error, response, body) {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
             console.log(body)
