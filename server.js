@@ -86,18 +86,14 @@ let createSubscription = () => {
 let sendToZetaHub = (event) => {
   console.log("sendToZetaHub function", event)
   let email = 'dmatt+glitch@disqus.com';
-  let createUserPayload = {
-    "attributes": {},
-  }
   let createUserOptions = {
+    uri: `https://people.api.boomtrain.com/v1/person/disqus/${email}/`,
     headers: {
       Authorization: `Bearer ${process.env.ZETAHUB_ACCESS_TOKEN}`
     },
-    uri: `https://people.api.boomtrain.com/v1/person/disqus/${email}/`,
-    body: createUserPayload,
-    method: 'PUT'
+    body: { attributes: {}}
   }
-  request(createUserOptions, function (error, response, body) {
+  request.put(createUserOptions, function (error, response, body) {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
             console.log(body)
