@@ -56,7 +56,7 @@ let authorizeZetaHub = () => {
 }
 
 // Uncomment to get ZetaHub JWT token for endpoints that require auth 
-// authorizeZetaHub()
+//authorizeZetaHub()
 
 // No idea why this is failing with `request({json: {}})` method
 
@@ -87,9 +87,9 @@ let sendToZetaHub = (event) => {
   console.log("sendToZetaHub function", event)
   let testEmail = 'dmatt+glitch@disqus.com';
   let createUserOptions = {
-    uri: `https://people.api.boomtrain.com/v1/person/disqus/${event.transformed_data.author.email}/`,
+    uri: `https://people.api.boomtrain.com/v1/person/disqus/email/${event.transformed_data.author.email}`,
     headers: {
-      'Authorization': `Bearer ${process.env.ZETAHUB_ACCESS_TOKEN}`
+      'Authorization': `Bearer ${process.env.ZETAHUB_ID_TOKEN}`
     },
     body: JSON.stringify({ attributes: {}})
   }
