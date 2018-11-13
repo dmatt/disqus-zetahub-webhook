@@ -82,18 +82,22 @@ let createSubscription = () => {
 // createSubscription()
 
 let createUserPayload = {
-    "client_id": "FP3iP1blgJbdmmSRYS1I96byb1nXryTs",
-    "username": process.env.ZETAHUB_USERNAME,
-    "password": process.env.ZETAHUB_PASSWORD,
-    "connection": "Username-Password-Authentication",
-    "scope": "openid app_metadata name email user_id",
-    "grant_type": "password"
+    "attributes": {},
+}
+
+let createUserOptions = {
+  headers: {
+    Authorization: `Bearer ${process.env.ZETAHUB_ACCESS_TOKEN}`
+  },
+  body: createUserPayload,
+  method: 'PUT'
 }
 
 let sendToZetaHub = (event) => {
   console.log("sendToZetaHub function")
+  let email = event.
   request.post(
-    "https://boomtrain.auth0.com/oauth/ro",
+    "https://people.api.boomtrain.com/v1/person/disqus/email/",
     { json: createUserPayload },
     function (error, response, body) {
         console.log("sendToZetaHub callback function")
