@@ -1,4 +1,4 @@
-// 👀 TODO: Set some attribites http://docs.zetaglobal.com/docs/create-or-update-a-person
+// 👀 TODO: Set some attribites http://docs.zetaglobal.com/docs/create-or-update-a-person, then send email?
 
 // server.js
 // where your node app starts
@@ -81,11 +81,16 @@ let createSubscription = () => {
 // Uncomment to restart glitch app and create a subscription
 // createSubscription()
 
+// TODO
+// if post[create || vote] has [parent \\ target], get parent id.author.email and upsert into ZH
+// get ZH user id and add event to that user http://docs.zetaglobal.com/docs/track-an-event
+//
+// i.e. `post`, `vote`, nested: `create`, `update`, `delete`
 
+// in ZetaHub trigger email on all new events
 
 let sendToZetaHub = (event) => {
   console.log("sendToZetaHub function", event)
-  let testEmail = 'dmatt+glitch@disqus.com';
   let createUserOptions = {
     uri: `https://people.api.boomtrain.com/v1/person/disqus/email/${event.transformed_data.author.email}`,
     headers: {
