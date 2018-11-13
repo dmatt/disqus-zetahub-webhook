@@ -1,4 +1,4 @@
-Disqus Webhooks Example: start consuming [Disqus webhooks](https://help.disqus.com/developer/webhooks) 
+Disqus Webhooks Example: start consuming [Disqus webhooks](https://help.disqus.com/developer/webhooks) and send to ZetaHub
 ======================================================================
 
 ---
