@@ -1,4 +1,4 @@
-// 👀 TODO: Set some attribites http://docs.zetaglobal.com/docs/create-or-update-a-person, then send email?
+// 👀 TODO: Set some attribites http://docs.zetaglobal.com/docs/create-or-update-a-person, then create email campaign in ZH?
 
 // server.js
 // where your node app starts

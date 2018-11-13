@@ -1,4 +1,4 @@
-Disqus Webhooks Example: start consuming [Disqus webhooks]() in _no time_*
+Disqus Webhooks Example: start consuming [Disqus webhooks](https://help.disqus.com/developer/webhooks) 
 ======================================================================
 
 ---
@@ -26,4 +26,4 @@ That's it! 🎉
 
 **To see your webhooks roll in, click `"Show"` 👆 and leave a comment or vote in Disqus embed.**
 
-This example remixed from [wistia-webhooks-example](https://glitch.com/~wistia-webhooks-example)
+This example remixed from [wistia-webhooks-example](https://glitch.com/~wistia-webhooks-example).
