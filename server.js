@@ -81,12 +81,10 @@ let createSubscription = () => {
 // Uncomment to restart glitch app and create a subscription
 // createSubscription()
 
-// TODO
-// if post[create || vote] has [parent \\ target], get parent id.author.email and upsert into ZH
-// get ZH user id and add event to that user http://docs.zetaglobal.com/docs/track-an-event
-//
-// i.e. `post`, `vote`, nested: `create`, `update`, `delete`
-
+// How vote and post notifications could work:
+// if post[create || vote] has [parent || target], get that id.author.email and upsert into ZH
+  // other events: `post`, `vote`, nested: `create`, `update`, `delete`
+// get that ZH user id and add vote or post notification event to that user http://docs.zetaglobal.com/docs/track-an-event
 // in ZetaHub trigger email on all new events
 
 let sendToZetaHub = (event) => {
