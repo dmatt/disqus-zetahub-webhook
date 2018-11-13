@@ -81,25 +81,23 @@ let createSubscription = () => {
 // Uncomment to restart glitch app and create a subscription
 // createSubscription()
 
-let createUserPayload = {
-    "attributes": {},
-}
 
-let createUserOptions = {
-  headers: {
-    Authorization: `Bearer ${process.env.ZETAHUB_ACCESS_TOKEN}`
-  },
-  body: createUserPayload,
-  method: 'PUT'
-}
 
 let sendToZetaHub = (event) => {
-  console.log("sendToZetaHub function")
-  let email = event.
-  request.post(
-    "https://people.api.boomtrain.com/v1/person/disqus/email/",
-    { json: createUserPayload },
-    function (error, response, body) {
+  console.log("sendToZetaHub function", event)
+  let email = 'dmatt+glitch@disqus.com';
+  let createUserPayload = {
+    "attributes": {},
+  }
+  let createUserOptions = {
+    headers: {
+      Authorization: `Bearer ${process.env.ZETAHUB_ACCESS_TOKEN}`
+    },
+    uri: `https://people.api.boomtrain.com/v1/person/disqus/${email}/`,
+    body: createUserPayload,
+    method: 'PUT'
+  }
+  request(createUserOptions, function (error, response, body) {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
             console.log(body)
