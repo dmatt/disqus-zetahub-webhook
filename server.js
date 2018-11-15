@@ -87,6 +87,22 @@ let createSubscription = () => {
 // get that ZH user id and add vote or post notification event to that user http://docs.zetaglobal.com/docs/track-an-event
 // in ZetaHub trigger email on all new events
 
+let hasEmail = (event) => {
+  return event.transformed_data.author.email
+}
+
+let isVoteEvent = (event) => {
+  return event
+}
+
+let isCommentEvent = (event) => {
+  return event
+}
+
+let hasTarget = (event) => {
+  return event.transformed_data.author.email
+}
+
 let sendToZetaHub = (event) => {
   console.log("sendToZetaHub function", event)
   let createUserOptions = {
