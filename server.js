@@ -100,7 +100,17 @@ let isCommentEvent = (event) => {
 }
 
 let hasTarget = (event) => {
-  return event.transformed_data.recipient
+  return event.transformed_data.recipient || event.transformed_data.parent
+}
+
+let createUserZh = (event) => {
+
+  return userZh
+}
+
+let createEventZh = (event) => {
+
+  return eventZh
 }
 
 let sendToZetaHub = (event) => {
@@ -112,17 +122,19 @@ let sendToZetaHub = (event) => {
     },
     body: JSON.stringify({ attributes: {}})
   }
-  request.put(createUserOptions, function (error, response, body) {
+  return request.put(createUserOptions, function (error, response, body) {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
-            console.log(body)
+            return body
         } else {
-          console.log(body)
+          return error
         }
     }
   );
   console.log(event)
 }
+
+
 
 // Listen for incoming create webhook requests
 app.post("/webhook", function (request, response, next) {
