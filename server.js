@@ -162,8 +162,6 @@ let sendToZetaHub = (event) => {
   }
 }
 
-
-
 // Listen for incoming create webhook requests
 app.post("/webhook", function (request, response, next) {
 
