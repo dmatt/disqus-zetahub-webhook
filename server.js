@@ -63,11 +63,11 @@ let authorizeZetaHub = () => {
 let createSubscription = () => {
   console.log("webhook function")
   request.post("https://disqus.com/api/3.0/forums/webhooks/create.json?"
-    +"secret="+process.env.WEBHOOKS_SECRET_KEY
+    +"secret="+process.env.WEBHOOKS_SECRET
     +"&api_key="+process.env.WEBHOOKS_PUBLIC_KEY
     +"&access_token="+process.env.WEBHOOKS_ACCESS_TOKEN
     +"&forum=disqus-demo-pro"
-    +"&url=https://disqus-webhook-example.glitch.me/webhook", function (error, response, body) {
+    +"&url=https://disqus-zetahub-webhook.glitch.me/webhook", function (error, response, body) {
         console.log("webhook callback function")
         if (!error && response.statusCode == 200) {
             console.log(response)
@@ -116,16 +116,15 @@ let createUserZh = (event) => {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
           console.log(body)  
-          resolve(body.bsin)
+          resolve({event: event, bsin: body.bsin})
         } else {
           reject(error)
         }
-    }
-  );
+    });
   });
 }
 
-let createEventZh = (userZh) => {
+let createEventZh = (eventUserZh) => {
   let createEventOptions = {
     uri: `https://events.api.boomtrain.com/event/disqus`,
     headers: {
@@ -133,14 +132,14 @@ let createEventZh = (userZh) => {
     },
     body: JSON.stringify({
       site_id: 'disqus',
-      bsin: userZh,
+      bsin: eventUserZh.bsin,
       event_type: 'reply',
       resource_type: 'comment',
-      resource_id: event.transformed_data.id,
-      timestamp: event.timestamp
+      resource_id: eventUserZh.event.transformed_data.id,
+      timestamp: eventUserZh.event.timestamp
     })
   }
-  return new Promise( (resolve, reject) => {
+  return new Promise((resolve, reject) => {
         request.put(createEventOptions, function (error, response, body) {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
@@ -158,7 +157,7 @@ let sendToZetaHub = (event) => {
   if (hasEmail(event) && isCommentEvent(event) && hasTarget(event)) {
     return createUserZh(event).then(createEventZh());
   } else {
-    console.log('hasEmail: ', hasEmail(event),'isCommentEvent: ', isCommentEvent(event),'isTarget: ', hasTarget(event));
+    console.error('hasEmail: ', hasEmail(event),'isCommentEvent: ', isCommentEvent(event),'isTarget: ', hasTarget(event));
   }
 }
 

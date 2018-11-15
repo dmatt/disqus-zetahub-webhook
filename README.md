@@ -21,6 +21,12 @@ Remixing instructions:
 
 2. uncomment `// createSubscription()` to create a webhook subscription for the url specified with `url`
 
+Also:
+
+- need to add glitch domain to Disqus Application > Settings > Domains
+- ZetaHub keys
+- Disqus keys
+- Disqus shortname
 
 That's it! 🎉
 
