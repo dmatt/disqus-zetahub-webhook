@@ -92,15 +92,15 @@ let hasEmail = (event) => {
 }
 
 let isVoteEvent = (event) => {
-  return event
+  return event.transformed_data.object_type === 'vote';
 }
 
 let isCommentEvent = (event) => {
-  return event
+  return event.transformed_data.object_type === 'comment';
 }
 
 let hasTarget = (event) => {
-  return event.transformed_data.author.email
+  return event.transformed_data.recipient
 }
 
 let sendToZetaHub = (event) => {
