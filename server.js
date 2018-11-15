@@ -111,16 +111,18 @@ let createUserZh = (event) => {
     },
     body: JSON.stringify({ attributes: {}})
   }
-  return request.put(createUserOptions, function (error, response, body) {
+  return new Promise( (resolve, reject) => {
+    request.put(createUserOptions, function (error, response, body) {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
           console.log(body)  
-          return body.user.bsin
+          resolve(body.user.bsin)
         } else {
-          return error
+          reject(error)
         }
     }
   );
+  });
 }
 
 let createEventZh = (event, userZh) => {
@@ -138,23 +140,25 @@ let createEventZh = (event, userZh) => {
       timestamp: event.timestamp
     })
   }
-  return request.put(createEventOptions, function (error, response, body) {
+  return new Promise( (resolve, reject) => {
+        request.put(createEventOptions, function (error, response, body) {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
           console.log(body)  
-          return body.eventId
+          resolve(body.eventId)
         } else {
-          return error
+          reject(error)
         }
     }
   );
+  });
 }
 
 let sendToZetaHub = (event) => {
   if (hasEmail(event) && isCommentEvent(event) && hasTarget(event)) {
-    createUserZh(event)
+    createUserZh(event).then(createEventZh(event,))
   } else {
-    console.log()
+    console.log('hasEmail: ', hasEmail(event),'isCommentEvent: ', isCommentEvent(event),'isTarget: ', hasTarget(event));
   }
   
 }
