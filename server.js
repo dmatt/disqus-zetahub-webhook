@@ -112,7 +112,6 @@ let createUserZh = (event) => {
     body: JSON.stringify({ attributes: {}})
   }
   return new Promise( (resolve, reject) => {
-    let event = event;
     request.put(createUserOptions, function (error, response, body) {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
