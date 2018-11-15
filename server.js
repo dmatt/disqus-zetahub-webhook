@@ -115,7 +115,7 @@ let createUserZh = (event) => {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
           console.log(body)  
-          return body
+          return body.user.bsin
         } else {
           return error
         }
@@ -132,44 +132,31 @@ let createEventZh = (event, userZh) => {
     body: JSON.stringify({
       site_id: 'disqus',
       bsin: userZh.bsin,
-      event_type: ',
-      resource_type: ,
-      resource_id ,
-      timestamp  
+      event_type: 'reply',
+      resource_type: 'comment',
+      resource_id: event.transformed_data.id,
+      timestamp: event.timestamp
     })
   }
-  return request.put(createUserOptions, function (error, response, body) {
+  return request.put(createEventOptions, function (error, response, body) {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
           console.log(body)  
-          return body
+          return body.eventId
         } else {
           return error
         }
     }
   );
-  return eventZh
 }
 
 let sendToZetaHub = (event) => {
-  console.log("sendToZetaHub function", event)
-  let createUserOptions = {
-    uri: `https://people.api.boomtrain.com/v1/person/disqus/email/${event.transformed_data.author.email}`,
-    headers: {
-      'Authorization': `Bearer ${process.env.ZETAHUB_ID_TOKEN}`
-    },
-    body: JSON.stringify({ attributes: {}})
+  if (hasEmail(event) && isCommentEvent(event) && hasTarget(event)) {
+    createUserZh(event)
+  } else {
+    console.log()
   }
-  return request.put(createUserOptions, function (error, response, body) {
-        console.log("sendToZetaHub callback function")
-        if (!error && response.statusCode == 200) {
-            return body
-        } else {
-          return error
-        }
-    }
-  );
-  console.log(event)
+  
 }
 
 
