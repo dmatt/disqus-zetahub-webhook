@@ -1,4 +1,4 @@
-// 👀 TODO: Set some attribites http://docs.zetaglobal.com/docs/create-or-update-a-person, then create email campaign in ZH?
+// 👀 TODO: Test event creation, un-obfuscate PII, 
 
 // server.js
 // where your node app starts
@@ -112,6 +112,7 @@ let createUserZh = (event) => {
     body: JSON.stringify({ attributes: {}})
   }
   return new Promise( (resolve, reject) => {
+    let event = event;
     request.put(createUserOptions, function (error, response, body) {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
@@ -125,7 +126,7 @@ let createUserZh = (event) => {
   });
 }
 
-let createEventZh = (userZh, event) => {
+let createEventZh = (userZh) => {
   let createEventOptions = {
     uri: `https://events.api.boomtrain.com/event/disqus`,
     headers: {
@@ -145,7 +146,7 @@ let createEventZh = (userZh, event) => {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
           console.log(body)  
-          resolve(body.eventId)
+          resolve(body.id)
         } else {
           reject(error)
         }
