@@ -104,12 +104,50 @@ let hasTarget = (event) => {
 }
 
 let createUserZh = (event) => {
-
-  return userZh
+  let createUserOptions = {
+    uri: `https://people.api.boomtrain.com/v1/person/disqus/email/${event.transformed_data.author.email}`,
+    headers: {
+      'Authorization': `Bearer ${process.env.ZETAHUB_ID_TOKEN}`
+    },
+    body: JSON.stringify({ attributes: {}})
+  }
+  return request.put(createUserOptions, function (error, response, body) {
+        console.log("sendToZetaHub callback function")
+        if (!error && response.statusCode == 200) {
+          console.log(body)  
+          return body
+        } else {
+          return error
+        }
+    }
+  );
 }
 
-let createEventZh = (event) => {
-
+let createEventZh = (event, userZh) => {
+  let createEventOptions = {
+    uri: `https://events.api.boomtrain.com/event/disqus`,
+    headers: {
+      'Authorization': `Bearer ${process.env.ZETAHUB_ID_TOKEN}`
+    },
+    body: JSON.stringify({
+      site_id: 'disqus',
+      bsin: userZh.bsin,
+      event_type: ',
+      resource_type: ,
+      resource_id ,
+      timestamp  
+    })
+  }
+  return request.put(createUserOptions, function (error, response, body) {
+        console.log("sendToZetaHub callback function")
+        if (!error && response.statusCode == 200) {
+          console.log(body)  
+          return body
+        } else {
+          return error
+        }
+    }
+  );
   return eventZh
 }
 
