@@ -56,7 +56,7 @@ let authorizeZetaHub = () => {
 }
 
 // Uncomment to get ZetaHub JWT token for endpoints that require auth 
-//authorizeZetaHub()
+// authorizeZetaHub()
 
 // No idea why this is failing with `request({json: {}})` method
 
@@ -92,11 +92,11 @@ let hasEmail = (event) => {
 }
 
 let isVoteEvent = (event) => {
-  return event.transformed_data.object_type === 'vote';
+  return event.object_type === 'vote';
 }
 
 let isCommentEvent = (event) => {
-  return event.transformed_data.object_type === 'comment';
+  return event.object_type === 'post';
 }
 
 let hasTarget = (event) => {
@@ -116,7 +116,7 @@ let createUserZh = (event) => {
         console.log("sendToZetaHub callback function")
         if (!error && response.statusCode == 200) {
           console.log(body)  
-          resolve(body.user.bsin)
+          resolve(body.bsin)
         } else {
           reject(error)
         }
@@ -125,7 +125,7 @@ let createUserZh = (event) => {
   });
 }
 
-let createEventZh = (event, userZh) => {
+let createEventZh = (userZh, event) => {
   let createEventOptions = {
     uri: `https://events.api.boomtrain.com/event/disqus`,
     headers: {
@@ -133,7 +133,7 @@ let createEventZh = (event, userZh) => {
     },
     body: JSON.stringify({
       site_id: 'disqus',
-      bsin: userZh.bsin,
+      bsin: userZh,
       event_type: 'reply',
       resource_type: 'comment',
       resource_id: event.transformed_data.id,
@@ -156,11 +156,10 @@ let createEventZh = (event, userZh) => {
 
 let sendToZetaHub = (event) => {
   if (hasEmail(event) && isCommentEvent(event) && hasTarget(event)) {
-    createUserZh(event).then(createEventZh(event,))
+    return createUserZh(event).then(createEventZh());
   } else {
     console.log('hasEmail: ', hasEmail(event),'isCommentEvent: ', isCommentEvent(event),'isTarget: ', hasTarget(event));
   }
-  
 }
 
 
