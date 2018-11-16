@@ -41,18 +41,16 @@ let authorizePayload = {
 
 let authorizeZetaHub = () => {
   console.log("authorizeZetaHub function")
-  request.post(
-    "https://boomtrain.auth0.com/oauth/ro",
-    { json: authorizePayload },
-    function (error, response, body) {
-        console.log("authorizeZetaHub callback function")
-        if (!error && response.statusCode == 200) {
-            console.log(body)
-        } else {
-          console.log(body)
-        }
+    
+    try {
+      request.post(
+        "https://boomtrain.auth0.com/oauth/ro",
+        { json: authorizePayload }, function (error, response, body) {
+            console.log("authorizeZetaHub callback function", body)
+        });
+    } catch(e) {
+      console.error(e)
     }
-  );
 }
 
 // Uncomment to get ZetaHub JWT token for endpoints that require auth 
@@ -67,7 +65,7 @@ let createSubscription = () => {
     +"&api_key="+process.env.WEBHOOKS_PUBLIC_KEY
     +"&access_token="+process.env.WEBHOOKS_ACCESS_TOKEN
     +"&forum=disqus-demo-pro"
-    +"&url=https://disqus-zetahub-webhook.glitch.me/webhook", function (error, response, body) {
+    +"&url=https://disqus-zetahub-webhook-example.glitch.me/webhook", function (error, response, body) {
         console.log("webhook callback function")
         if (!error && response.statusCode == 200) {
             console.log(response)
@@ -78,7 +76,6 @@ let createSubscription = () => {
   );
 }
 
-// Uncomment to restart glitch app and create a subscription
 // createSubscription()
 
 // How vote and post notifications could work:
@@ -103,28 +100,45 @@ let hasTarget = (event) => {
   return event.transformed_data.recipient || event.transformed_data.parent
 }
 
-let createUserZh = (event) => {
-  let createUserOptions = {
-    uri: `https://people.api.boomtrain.com/v1/person/disqus/email/${event.transformed_data.author.email}`,
-    headers: {
-      'Authorization': `Bearer ${process.env.ZETAHUB_ID_TOKEN}`
-    },
-    body: JSON.stringify({ attributes: {}})
-  }
+let getParentComment = (event) => { 
   return new Promise( (resolve, reject) => {
-    request.put(createUserOptions, function (error, response, body) {
-        console.log("sendToZetaHub callback function")
+    console.log(event.transformed_data.parent)
+  request.get("https://disqus.com/api/3.0/posts/details.json?"
+    +"api_key="+process.env.WEBHOOKS_PUBLIC_KEY
+    +"&access_token="+process.env.WEBHOOKS_ACCESS_TOKEN
+    +`&post=${event.transformed_data.parent}`, function (error, response, body) {
+        console.log("getParentCommentcallback function")
         if (!error && response.statusCode == 200) {
-          console.log(body)  
-          resolve({event: event, bsin: body.bsin})
+          resolve([event, JSON.parse(body)])
         } else {
-          reject(error)
+          reject(response)
         }
-    });
-  });
+    }
+  )
+  }).catch(onRejected).then(createUserZh)
 }
 
-let createEventZh = (eventUserZh) => {
+let createUserZh = (event) => { 
+  return new Promise( (resolve, reject) => {
+  let createUserOptions = {
+      uri: `https://people.api.boomtrain.com/v1/person/disqus/email/${event[1].response.author.email}`,
+      headers: {
+        'Authorization': `Bearer ${process.env.ZETAHUB_ID_TOKEN}`
+      },
+      body: JSON.stringify({ attributes: {}})
+    }
+    request.put(createUserOptions, function (error, response, body) {
+      console.log("createUser callback function")
+      if (!error && response.statusCode == 200) {
+        resolve([event[0], JSON.parse(body).data.bsin])
+      } else {
+        reject(error)
+      }
+    });
+  }).catch(onRejected).then(createEventZh)
+};
+
+let createEventZh = (userZh) => { new Promise( (resolve, reject) => {
   let createEventOptions = {
     uri: `https://events.api.boomtrain.com/event/disqus`,
     headers: {
@@ -132,34 +146,186 @@ let createEventZh = (eventUserZh) => {
     },
     body: JSON.stringify({
       site_id: 'disqus',
-      bsin: eventUserZh.bsin,
+      bsin: userZh[1],
       event_type: 'reply',
       resource_type: 'comment',
-      resource_id: eventUserZh.event.transformed_data.id,
-      timestamp: eventUserZh.event.timestamp
+      properties: userZh[0]
+      // resource_id: eventUserZh[0].transformed_data.id,
+      // timestamp: eventUserZh[0].timestamp
     })
   }
-  return new Promise((resolve, reject) => {
-        request.put(createEventOptions, function (error, response, body) {
-        console.log("sendToZetaHub callback function")
-        if (!error && response.statusCode == 200) {
-          console.log(body)  
-          resolve(body.id)
-        } else {
-          reject(error)
-        }
+  request.post(createEventOptions, function (error, response, body) {
+    console.log("createEvent callback function")
+    if (!error && response.statusCode == 200) {
+      console.log("🐨🐨","Reply Notification Event created for ", createEventOptions ,"Response: ", body)
+      resolve(body)
+    } else {
+      console.log(error)
+      reject(error)
     }
-  );
   });
-}
+}).catch(onRejected)};
 
 let sendToZetaHub = (event) => {
   if (hasEmail(event) && isCommentEvent(event) && hasTarget(event)) {
-    return createUserZh(event).then(createEventZh());
+    getParentComment(event)
   } else {
     console.error('hasEmail: ', hasEmail(event),'isCommentEvent: ', isCommentEvent(event),'isTarget: ', hasTarget(event));
   }
 }
+
+let onRejected = () => function(reason) {
+   console.error(reason)
+}
+
+let eventFixture = { timestamp: 1542323311,
+
+  transformed_data: 
+
+   { forum: 'disqus-demo-pro',
+
+     parent: 4197218512,
+
+     isApproved: true,
+
+     editableUntil: '2018-11-22T18:07:39',
+
+     isFlagged: false,
+
+     dislikes: 0,
+
+     raw_message: 'al',
+
+     threadData: 
+
+      { feed: 'https://disqus-demo-pro.disqus.com/disqus_zetahub_webhook_example/latest.rss',
+
+        author: '252699845',
+
+        dislikes: 0,
+
+        raw_message: '',
+
+        isClosed: false,
+
+        link: 'https://disqus-zetahub-webhook-example.glitch.me/',
+
+        likes: 0,
+
+        id: '7032233392',
+
+        message: '',
+
+        isSpam: false,
+
+        isDeleted: false,
+
+        category: '6859065',
+
+        forum: 'disqus-demo-pro',
+
+        title: 'disqus-zetahub-webhook-example',
+
+        identifiers: [Array],
+
+        posts: 50,
+
+        clean_title: 'disqus-zetahub-webhook-example',
+
+        slug: 'disqus_zetahub_webhook_example',
+
+        signedLink: 'https://disq.us/?url=https%3A%2F%2Fdisqus-zetahub-webhook-example.glitch.me%2F&key=a4FtiByHUKTR_G_jsog_uA',
+
+        validateAllPosts: false,
+
+        createdAt: '2018-11-09T14:22:46',
+
+        hasStreaming: false,
+
+        highlightedPost: null },
+
+     numReports: 0,
+
+     likes: 0,
+
+     sb: false,
+
+     message: '<p>al</p>',
+
+     isSpam: false,
+
+     isHighlighted: false,
+
+     canVote: false,
+
+     thread: '7032233392',
+
+     approxLoc: { lat: 37.750999450683594, lng: -97.8219985961914 },
+
+     media: [],
+
+     author: 
+
+      { username: 'iamfrancisyo',
+
+        disable3rdPartyTrackers: false,
+
+        isPowerContributor: false,
+
+        isPrimary: true,
+
+        id: '21035893',
+
+        profileUrl: 'https://disqus.com/by/iamfrancisyo/',
+
+        about: 'Publisher Success @Disqus –– I\'m in your inbox, answerin\' your questions..',
+
+        name: 'Daniel',
+
+        url: '',
+
+        isAnonymous: false,
+
+        emailHash: '4c04069e1919278a4e73ffe6291d63fd',
+
+        location: 'San Francisco, CA',
+
+        isPrivate: true,
+
+        signedUrl: '',
+
+        joinedAt: '2012-01-10T16:38:08',
+
+        email: 'd****@disqus.com',
+
+        isVerified: true,
+
+        avatar: [Object] },
+
+     createdAt: '2018-11-15T18:07:39',
+
+     id: '4197236362',
+
+     points: 0,
+
+     isDeletedByAuthor: false,
+
+     isDeleted: false,
+
+     isEdited: false,
+
+     flags: 0,
+
+     ipAddress: '***.***.***.246',
+
+     moderationLabels: [] },
+
+  object_type: 'post',
+
+  verb: 'create' }
+
+// FIXTURE: send the payload to the ZetaHub callback
+// sendToZetaHub(eventFixture);
 
 // Listen for incoming create webhook requests
 app.post("/webhook", function (request, response, next) {
@@ -176,8 +342,6 @@ app.post("/webhook", function (request, response, next) {
   // Verify that the incoming webhook is legit, using the secret key this server provided during creation
   if (disqusSignature === computedHash) {
     console.log("Signature looks good!")
-    
-    console.log("👤", JSON.parse(requestBody))
     // Disqus webhook documentation https://disqus.com/api/docs/forums/webhooks/
     
     // send the payload to the client side with socket.io
