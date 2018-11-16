@@ -1,4 +1,4 @@
-// 👀 TODO: Test event creation, un-obfuscate PII, 
+// TODO: function that periodically refreshes ZH token and stores it
 
 // server.js
 // where your node app starts
@@ -9,9 +9,16 @@ let app = express();
 let bodyParser = require('body-parser');
 
 const {getHash} = require('./signature-verification');
+const {testData} = require('./test-event');
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
 const request = require('request');
+const flatten = require('flat');
+const glitchup = require('glitchup');
+glitchup();
+
+// Use this inplace of a real webhook event for quick testing
+let fakeEvent = testData;
 
 http.listen(process.env.PORT || 3000, function(){
   console.log('listening');
@@ -41,18 +48,16 @@ let authorizePayload = {
 
 let authorizeZetaHub = () => {
   console.log("authorizeZetaHub function")
-  request.post(
-    "https://boomtrain.auth0.com/oauth/ro",
-    { json: authorizePayload },
-    function (error, response, body) {
-        console.log("authorizeZetaHub callback function")
-        if (!error && response.statusCode == 200) {
-            console.log(body)
-        } else {
-          console.log(body)
-        }
+    
+    try {
+      request.post(
+        "https://boomtrain.auth0.com/oauth/ro",
+        { json: authorizePayload }, function (error, response, body) {
+            console.log("authorizeZetaHub callback function", body)
+        });
+    } catch(e) {
+      console.error(e)
     }
-  );
 }
 
 // Uncomment to get ZetaHub JWT token for endpoints that require auth 
@@ -63,11 +68,11 @@ let authorizeZetaHub = () => {
 let createSubscription = () => {
   console.log("webhook function")
   request.post("https://disqus.com/api/3.0/forums/webhooks/create.json?"
-    +"secret="+process.env.WEBHOOKS_SECRET_KEY
-    +"&api_key="+process.env.WEBHOOKS_PUBLIC_KEY
-    +"&access_token="+process.env.WEBHOOKS_ACCESS_TOKEN
-    +"&forum=disqus-demo-pro"
-    +"&url=https://disqus-webhook-example.glitch.me/webhook", function (error, response, body) {
+    +"secret="+process.env.DISQUS_WEBHOOKS_SECRET
+    +"&api_key="+process.env.DISQUS_PUBLIC_KEY
+    +"&access_token="+process.env.DISQUS_ACCESS_TOKEN
+    +"&forum="+process.env.DISQUS_SHORTNAME
+    +"&url=https://"+process.env.GLITCH_DOMAIN+".glitch.me/webhook", function (error, response, body) {
         console.log("webhook callback function")
         if (!error && response.statusCode == 200) {
             console.log(response)
@@ -78,15 +83,15 @@ let createSubscription = () => {
   );
 }
 
-// Uncomment to restart glitch app and create a subscription
 // createSubscription()
 
-// How vote and post notifications could work:
-// if post[create || vote] has [parent || target], get that id.author.email and upsert into ZH
-  // other events: `post`, `vote`, nested: `create`, `update`, `delete`
-// get that ZH user id and add vote or post notification event to that user http://docs.zetaglobal.com/docs/track-an-event
-// in ZetaHub trigger email on all new events
+// The Disqus -> Webhook -> Glitch -> Zetahub flow works like this:
+// if event post[create] has [parent], get that id.author.email and upsert into ZH
+  // other possible webhook events: `post`, `vote`, nested: `create`, `update`, `delete`
+// get that ZH bsin and add post notification event object to that user as an event property http://docs.zetaglobal.com/docs/track-an-event
+// in ZetaHub configure a triggered email for all new events
 
+// Some checks on the event for some simple filtering of votes and comments without emails
 let hasEmail = (event) => {
   return event.transformed_data.author.email
 }
@@ -103,64 +108,88 @@ let hasTarget = (event) => {
   return event.transformed_data.recipient || event.transformed_data.parent
 }
 
-let createUserZh = (event) => {
-  let createUserOptions = {
-    uri: `https://people.api.boomtrain.com/v1/person/disqus/email/${event.transformed_data.author.email}`,
-    headers: {
-      'Authorization': `Bearer ${process.env.ZETAHUB_ID_TOKEN}`
-    },
-    body: JSON.stringify({ attributes: {}})
-  }
+let getParentComment = (event) => { 
   return new Promise( (resolve, reject) => {
-    request.put(createUserOptions, function (error, response, body) {
-        console.log("sendToZetaHub callback function")
+    console.log(event.transformed_data.parent)
+  request.get("https://disqus.com/api/3.0/posts/details.json?"
+    +"api_key="+process.env.DISQUS_PUBLIC_KEY
+    +"&access_token="+process.env.DISQUS_ACCESS_TOKEN
+    +`&post=${event.transformed_data.parent}`, function (error, response, body) {
+        console.log("getParentCommentcallback function")
         if (!error && response.statusCode == 200) {
-          console.log(body)  
-          resolve(body.bsin)
+          resolve([event, JSON.parse(body)])
         } else {
-          reject(error)
+          reject(body)
         }
     }
-  );
-  });
+  )
+  }).catch(onRejected).then(createUserZh)
 }
 
-let createEventZh = (userZh) => {
+let createUserZh = (event) => { 
+  return new Promise( (resolve, reject) => {
+    // Flatten the JSON object for so ZH treats each key as a User attribute
+    let flattenedEvent = flatten(event[0].transformed_data)
+    let createUserOptions = {
+      uri: `https://people.api.boomtrain.com/v1/person/${process.env.ZETAHUB_SITE_ID}/email/${event[1].response.author.email}`,
+      headers: {
+        'Authorization': `Bearer ${process.env.ZETAHUB_ID_TOKEN}`
+      },
+      body: JSON.stringify({ attributes: flattenedEvent})
+    }
+    request.put(createUserOptions, function (error, response, body) {
+      console.log("createUser callback function")
+      if (!error && response.statusCode == 200) {
+        resolve([event[0], JSON.parse(body).data.bsin])
+      } else {
+        reject(body)
+      }
+    });
+  }).catch(onRejected).then(createEventZh)
+};
+
+let createEventZh = (userZh) => { new Promise( (resolve, reject) => {
   let createEventOptions = {
-    uri: `https://events.api.boomtrain.com/event/disqus`,
+    uri: `https://events.api.boomtrain.com/event/${process.env.ZETAHUB_SITE_ID}`,
     headers: {
       'Authorization': `Bearer ${process.env.ZETAHUB_ID_TOKEN}`
     },
     body: JSON.stringify({
-      site_id: 'disqus',
-      bsin: userZh,
+      site_id: process.env.ZETAHUB_SITE_ID,
+      bsin: userZh[1],
       event_type: 'reply',
       resource_type: 'comment',
-      resource_id: event.transformed_data.id,
-      timestamp: event.timestamp
+      resource_id: userZh[0].transformed_data.id,
+      timestamp: userZh[0].timestamp,
+      properties: userZh[0],
     })
   }
-  return new Promise( (resolve, reject) => {
-        request.put(createEventOptions, function (error, response, body) {
-        console.log("sendToZetaHub callback function")
-        if (!error && response.statusCode == 200) {
-          console.log(body)  
-          resolve(body.id)
-        } else {
-          reject(error)
-        }
+  request.post(createEventOptions, function (error, response, body) {
+    console.log("createEvent callback function")
+    if (!error && response.statusCode == 200) {
+      console.log("🐨","Reply Notification Event created for ", createEventOptions ,"Response: ", body)
+      resolve(body)
+    } else {
+      console.log(error)
+      reject(body)
     }
-  );
   });
-}
+}).catch(onRejected)};
 
 let sendToZetaHub = (event) => {
   if (hasEmail(event) && isCommentEvent(event) && hasTarget(event)) {
-    return createUserZh(event).then(createEventZh());
+    getParentComment(event)
   } else {
-    console.log('hasEmail: ', hasEmail(event),'isCommentEvent: ', isCommentEvent(event),'isTarget: ', hasTarget(event));
+    console.error('hasEmail: ', hasEmail(event),'isCommentEvent: ', isCommentEvent(event),'isTarget: ', hasTarget(event));
   }
 }
+
+let onRejected = (reason) => {
+   console.error(reason)
+}
+
+// Testing, bypass the webhook listener
+sendToZetaHub(fakeEvent);
 
 // Listen for incoming create webhook requests
 app.post("/webhook", function (request, response, next) {
@@ -177,8 +206,6 @@ app.post("/webhook", function (request, response, next) {
   // Verify that the incoming webhook is legit, using the secret key this server provided during creation
   if (disqusSignature === computedHash) {
     console.log("Signature looks good!")
-    
-    console.log("👤", JSON.parse(requestBody))
     // Disqus webhook documentation https://disqus.com/api/docs/forums/webhooks/
     
     // send the payload to the client side with socket.io
