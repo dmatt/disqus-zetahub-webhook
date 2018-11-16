@@ -1,4 +1,4 @@
-// 👀 TODO: Test event creation, un-obfuscate PII, 
+// TODO: function that periodically refreshes ZH token and stores it
 
 // server.js
 // where your node app starts
@@ -13,6 +13,7 @@ const {testData} = require('./test-event');
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
 const request = require('request');
+const flatten = require('flat');
 const glitchup = require('glitchup');
 glitchup();
 
@@ -84,12 +85,13 @@ let createSubscription = () => {
 
 // createSubscription()
 
-// How vote and post notifications could work:
-// if post[create || vote] has [parent || target], get that id.author.email and upsert into ZH
-  // other events: `post`, `vote`, nested: `create`, `update`, `delete`
-// get that ZH user id and add vote or post notification event to that user http://docs.zetaglobal.com/docs/track-an-event
-// in ZetaHub trigger email on all new events
+// The Disqus -> Webhook -> Glitch -> Zetahub flow works like this:
+// if event post[create] has [parent], get that id.author.email and upsert into ZH
+  // other possible webhook events: `post`, `vote`, nested: `create`, `update`, `delete`
+// get that ZH bsin and add post notification event object to that user as an event property http://docs.zetaglobal.com/docs/track-an-event
+// in ZetaHub configure a triggered email for all new events
 
+// Some checks on the event for some simple filtering of votes and comments without emails
 let hasEmail = (event) => {
   return event.transformed_data.author.email
 }
@@ -126,12 +128,14 @@ let getParentComment = (event) => {
 
 let createUserZh = (event) => { 
   return new Promise( (resolve, reject) => {
-  let createUserOptions = {
+    // Flatten the JSON object for so ZH treats each key as a User attribute
+    let flattenedEvent = flatten(event[0].transformed_data)
+    let createUserOptions = {
       uri: `https://people.api.boomtrain.com/v1/person/${process.env.ZETAHUB_SITE_ID}/email/${event[1].response.author.email}`,
       headers: {
         'Authorization': `Bearer ${process.env.ZETAHUB_ID_TOKEN}`
       },
-      body: JSON.stringify({ attributes: event[0]})
+      body: JSON.stringify({ attributes: flattenedEvent})
     }
     request.put(createUserOptions, function (error, response, body) {
       console.log("createUser callback function")
