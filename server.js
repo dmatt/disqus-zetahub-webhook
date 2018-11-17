@@ -53,15 +53,16 @@ let authorizeZetaHub = () => {
       request.post(
         "https://boomtrain.auth0.com/oauth/ro",
         { json: authorizePayload }, function (error, response, body) {
-            console.log("authorizeZetaHub callback function", body)
+          console.log("ZH access tokens reset", body)
+          process.env.ZETAHUB_ID_TOKEN = body.id_token;
         });
     } catch(e) {
       console.error(e)
     }
 }
 
-// Uncomment to get ZetaHub JWT token for endpoints that require auth 
-// authorizeZetaHub()
+// Reset ZH tokens every  9 hours, before expiry 
+setInterval(authorizeZetaHub, 32400000);
 
 // No idea why this is failing with `request({json: {}})` method
 
@@ -189,7 +190,7 @@ let onRejected = (reason) => {
 }
 
 // Testing, bypass the webhook listener
-sendToZetaHub(fakeEvent);
+// sendToZetaHub(fakeEvent);
 
 // Listen for incoming create webhook requests
 app.post("/webhook", function (request, response, next) {
