@@ -37,6 +37,10 @@ app.get("/", function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
+let onRejected = (reason) => {
+   console.error(reason)
+}
+
 let authorizePayload = {
     "client_id": "FP3iP1blgJbdmmSRYS1I96byb1nXryTs",
     "username": process.env.ZETAHUB_USERNAME,
@@ -48,21 +52,23 @@ let authorizePayload = {
 
 let authorizeZetaHub = () => {
   console.log("authorizeZetaHub function")
-    
-    try {
-      request.post(
-        "https://boomtrain.auth0.com/oauth/ro",
-        { json: authorizePayload }, function (error, response, body) {
+  return new Promise( (resolve, reject) => {
+    request.post(
+      "https://boomtrain.auth0.com/oauth/ro",
+      { json: authorizePayload }, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
           console.log("ZH access tokens reset", body)
           process.env.ZETAHUB_ID_TOKEN = body.id_token;
-        });
-    } catch(e) {
-      console.error(e)
-    }
+          resolve(body.id_token);
+        } else {
+          reject(body)
+        }
+      });
+  }).catch(onRejected)
 }
 
-// Reset ZH tokens every  9 hours, before expiry 
-setInterval(authorizeZetaHub, 32400000);
+// Reset ZH tokens every  hour, before expiry
+setInterval(authorizeZetaHub, 1000 * 60 * 60);
 
 // No idea why this is failing with `request({json: {}})` method
 
@@ -143,6 +149,7 @@ let createUserZh = (event) => {
       if (!error && response.statusCode == 200) {
         resolve([event[0], JSON.parse(body).data.bsin])
       } else {
+        // otherwise reject and carry on
         reject(body)
       }
     });
@@ -178,15 +185,12 @@ let createEventZh = (userZh) => { new Promise( (resolve, reject) => {
 }).catch(onRejected)};
 
 let sendToZetaHub = (event) => {
+  console.log(event)
   if (hasEmail(event) && isCommentEvent(event) && hasTarget(event)) {
     getParentComment(event)
   } else {
     console.error('hasEmail: ', hasEmail(event),'isCommentEvent: ', isCommentEvent(event),'isTarget: ', hasTarget(event));
   }
-}
-
-let onRejected = (reason) => {
-   console.error(reason)
 }
 
 // Testing, bypass the webhook listener
@@ -209,8 +213,8 @@ app.post("/webhook", function (request, response, next) {
     console.log("Signature looks good!")
     // Disqus webhook documentation https://disqus.com/api/docs/forums/webhooks/
     
-    // send the payload to the client side with socket.io
-    io.emit('event', JSON.parse(requestBody))
+    // Don't send the payload to the client with socket.io because email/IP is enabled
+    // io.emit('event', JSON.parse(requestBody))
     
     // send the payload to the ZetaHub callback
     sendToZetaHub(JSON.parse(requestBody));
@@ -223,3 +227,5 @@ app.post("/webhook", function (request, response, next) {
     console.log("Signature doesn't match. Ruh-roh.")
   }
 });
+
+// /pause
